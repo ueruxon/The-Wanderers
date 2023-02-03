@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Game.Code.Commander;
 using Game.Code.Common;
 using Game.Code.Core;
+using Game.Code.Logic.Buildings;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Units;
 using UnityEngine;
@@ -41,24 +42,6 @@ namespace Game.Code.Services.UnitTask
 
             _notifyDelay = new WaitForSeconds(0.7f);
         }
-        
-        public void AcceptGlobalUnitCommand(UnitCommandType commandType)
-        {
-            switch (commandType)
-            {
-                case UnitCommandType.Idle:
-                    break;
-                case UnitCommandType.ChopTree:
-                    CreateChopTreeTask();
-                    break;
-                case UnitCommandType.Build:
-                    break;
-                case UnitCommandType.Patrol:
-                    break;
-            }
-
-            NotifyAllAvailableUnits();
-        }
 
         public bool HasTask() => 
             _currentTaskForUnits.Count > 0;
@@ -79,7 +62,7 @@ namespace Game.Code.Services.UnitTask
         public void ClearAllTask() =>
             _currentTaskForUnits.Clear();
         
-        public void CreateGatherResourceTask(Resource resource)
+        public void CreateGatherResourceTask(Resource resource, Storage storage)
         {
             if (resource.IsAvailable())
             {
@@ -87,12 +70,34 @@ namespace Game.Code.Services.UnitTask
                 {
                     Resource = resource,
                     Target = resource.transform,
-                    Goal = _dynamicGameContext.GetStorage().transform,
-                    Storage = _dynamicGameContext.GetStorage()
+                    Goal = storage.GetInteractionPoint(),
+                    Storage = storage
                 };
                 
                 AddTask(new UnitTask(command));
             }
+            
+            NotifyAllAvailableUnits();
+        }
+
+        public void CreateChopTreeTask(Storage storage)
+        {
+            foreach (ResourceNodeSpawner nodeSpawner in _chopTrees)
+            {
+                if (nodeSpawner.HasResource())
+                {
+                    ChopTreeCommand chopTreeCommand = new ChopTreeCommand()
+                    {
+                        ResourceNode = nodeSpawner.GetResourceNode(),
+                        Target = nodeSpawner.GetResourceNode().transform,
+                        Goal = storage.transform
+                    };
+
+                    AddTask(new UnitTask(command: chopTreeCommand));
+                }
+            }
+            
+            NotifyAllAvailableUnits();
         }
 
         private void OnUnitTaskCompleted(Unit unit, UnitTask task)
@@ -105,7 +110,7 @@ namespace Game.Code.Services.UnitTask
             
             unit.TaskCompleted -= OnUnitTaskCompleted;
         }
-        
+
         private void NotifyAllAvailableUnits()
         {
             if (_notifyRoutineIsRunning == false)
@@ -123,24 +128,6 @@ namespace Game.Code.Services.UnitTask
             }
 
             _notifyRoutineIsRunning = false;
-        }
-        
-        private void CreateChopTreeTask()
-        {
-            foreach (ResourceNodeSpawner nodeSpawner in _chopTrees)
-            {
-                if (nodeSpawner.HasResource())
-                {
-                    ChopTreeCommand chopTreeCommand = new ChopTreeCommand()
-                    {
-                        ResourceNode = nodeSpawner.GetResourceNode(),
-                        Target = nodeSpawner.GetResourceNode().transform,
-                        Goal = _dynamicGameContext.GetStorage().transform
-                    };
-
-                    AddTask(new UnitTask(command: chopTreeCommand));
-                }
-            }
         }
     }
 

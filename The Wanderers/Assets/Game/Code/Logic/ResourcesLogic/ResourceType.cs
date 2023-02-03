@@ -5,6 +5,6 @@
         Wood,
         Stone,
         Food,
-        Ore
+        Coal
     }
 }

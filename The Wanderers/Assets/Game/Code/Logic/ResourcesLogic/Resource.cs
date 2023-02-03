@@ -12,6 +12,9 @@ namespace Game.Code.Logic.ResourcesLogic
         public bool IsAvailable() => 
             _isPickup == false;
 
+        public ResourceType GetResourceType() => 
+            _resourceType;
+
         public void Drop()
         {
             _collider.enabled = true;

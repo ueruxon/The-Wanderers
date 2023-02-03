@@ -1,25 +1,26 @@
-﻿using Game.Code.Core;
+﻿using System;
+using Game.Code.Core;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace Game.Code.Logic.ResourcesLogic
 {
     public class ResourceNodeSpawner : MonoBehaviour
     {
+        public event Action<Resource> ResourceSpawned;
+
         [SerializeField] private ResourceType _resourceType;
         [SerializeField] private ResourceNode _resourceNodePrefab;
         [SerializeField] private Resource _resourcePrefab;
-
-        private DynamicGameContext _dynamicGameContext;
+        
         private ResourceNode _currentNode;
         
         private bool _isWorkedOut;
         private float _currentTimerToRespawn;
         private float _timeToRespawn = 20f;
 
-        public void Init(DynamicGameContext dynamicGameContext)
+        public void Init()
         {
-            _dynamicGameContext = dynamicGameContext;
-
             SpawnNode();
         }
         
@@ -65,9 +66,9 @@ namespace Game.Code.Logic.ResourcesLogic
         {
             Vector3 randomPosition = GetRandomPositionOnRadius(transform.position);
             Resource resource = Instantiate(_resourcePrefab, randomPosition, Quaternion.identity);
-            resource.name = $"Wood: {transform.position.x}";
+            resource.name = $"{resource.GetResourceType().ToString()}, Position: {transform.position.x}";
             
-            _dynamicGameContext.AddResource(resource);
+            ResourceSpawned?.Invoke(resource);
         }
         
         private Vector3 GetRandomPositionOnRadius(Vector3 startPosition)
@@ -78,7 +79,7 @@ namespace Game.Code.Logic.ResourcesLogic
             float x = randomRadius * Mathf.Cos(randomAngle);
             float z = randomRadius * Mathf.Sin(randomAngle);
             
-            return new Vector3(startPosition.x + x, .1f, startPosition.z + z);
+            return new Vector3(startPosition.x + x, .2f, startPosition.z + z);
         }
         
         private void OnDrawGizmos()
@@ -87,7 +88,7 @@ namespace Game.Code.Logic.ResourcesLogic
                 Gizmos.color = Color.yellow;
             if (_resourceType == ResourceType.Stone)
                 Gizmos.color = Color.gray;
-            if (_resourceType == ResourceType.Ore)
+            if (_resourceType == ResourceType.Coal)
                 Gizmos.color = Color.cyan;
 
             Gizmos.DrawSphere(transform.position, 1f);

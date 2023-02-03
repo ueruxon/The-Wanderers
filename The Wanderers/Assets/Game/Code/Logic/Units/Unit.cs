@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using Game.Code.Core;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.UtilityAI;
@@ -23,7 +22,7 @@ namespace Game.Code.Logic.Units
         [SerializeField] private AISensor _aiSensor;
         [SerializeField] private MovementSystemBase _movementSystem;
         [SerializeField] private BehaviorData _behaviorData;
-        [SerializeField] private Transform _testAttachPoint;
+        [SerializeField] private AttachedResource _attachedResource;
 
         private DynamicGameContext _dynamicGameContext;
         private IUnitTaskService _taskService;
@@ -55,6 +54,8 @@ namespace Game.Code.Logic.Units
             _aiBrain.Init(_aiContext, _aiPlanner);
             
             _aiSensor.Init(_aiContext);
+            
+            _attachedResource.Init(transform);
 
             SetState(UnitState.Idle);
         }
@@ -69,9 +70,19 @@ namespace Game.Code.Logic.Units
 
         public void AttachResource(Resource resource)
         {
-            _resourceInHand = resource;
-            _resourceInHand.transform.SetParent(_testAttachPoint);
-            _resourceInHand.transform.position = _testAttachPoint.position;
+            _attachedResource.Attach(resource);
+            
+            // _resourceInHand = resource;
+            // _resourceInHand.transform.SetParent(_testAttachPoint);
+            // _resourceInHand.transform.position = _testAttachPoint.position;
+        }
+
+        public void DetachResource()
+        {
+            _attachedResource.Detach();
+            
+            // Destroy(_resourceInHand.gameObject);
+            // _resourceInHand = null;
         }
 
         private void Update()
@@ -82,12 +93,6 @@ namespace Game.Code.Logic.Units
         private void FixedUpdate()
         {
             _aiSensor.Find();
-        }
-
-        public void DetachResource()
-        {
-            Destroy(_resourceInHand.gameObject);
-            _resourceInHand = null;
         }
 
         private void SetState(UnitState nextState) => 

@@ -12,8 +12,6 @@ namespace Game.Code.Logic.UtilityAI.Actions
         {
             base.OnEnter(context);
             
-            print("Drop resource");
-            
             ICommand command = context.ActionCommand;
             
             if (command is GrabResourceCommand grabCommand) 
@@ -27,11 +25,11 @@ namespace Game.Code.Logic.UtilityAI.Actions
 
             if (context.MovementSystem.ReachedDestination())
             {
-                print("Выкинул, конец задачи?");
+                print("Выкинул, конец задачи.");
                 // переписать естессна
                 _storage.AddResource(context.PickupResource);
 
-                context.GetGlobalContext().RemoveResource(context.PickupResource);
+                //context.GetGlobalContext().RemoveResource(context.PickupResource);
                 context.SetPickupResource(null);
                 context.CurrentUnit.DetachResource();
 

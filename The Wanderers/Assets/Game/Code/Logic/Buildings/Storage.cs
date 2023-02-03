@@ -9,28 +9,32 @@ namespace Game.Code.Logic.Buildings
     {
         private const int StorageCapacity = 42;
         
+        [SerializeField] private ResourceType _resourceType;
+        [SerializeField] private Transform _interactionPoint;
+        
         [Header("Visual Resource Filler Settings")]
         [Space(4)]
         [SerializeField] private Transform _visualResourceFillerPrefab;
         [SerializeField] private Transform _fillerContainer;
 
-        private ResourceType _resourceType;
-
         private Stack<Resource> _storedResources;
         private Transform[] _visualResourceFillers;
 
         private int _currentResourceIndex;
+        private int _reservedPlaceCount;
 
         private void Awake()
         {
             _storedResources = new Stack<Resource>(StorageCapacity);
             _visualResourceFillers = new Transform[StorageCapacity];
             _currentResourceIndex = 0;
-            
+            _reservedPlaceCount = 0;
+
             GenerateResourceFillers();
-            
-            print(_visualResourceFillers[_currentResourceIndex]);
         }
+
+        public ResourceType GetStoredResourceType() => 
+            _resourceType;
 
         public bool HasResource() => 
             _storedResources.Count > 0;
@@ -38,11 +42,20 @@ namespace Game.Code.Logic.Buildings
         public bool IsFull() => 
             _storedResources.Count == StorageCapacity;
 
+        public bool HasPlaceForReserve() => 
+            _reservedPlaceCount + 1 <= StorageCapacity;
+
+        public void ReservePlaceForResource() => 
+            _reservedPlaceCount++;
+
+        public void ClearReservedPlace() => 
+            _reservedPlaceCount--;
+
         public void AddResource(Resource resource)
         {
             _visualResourceFillers[_currentResourceIndex].gameObject.SetActive(true);
             _currentResourceIndex++;
-            
+
             _storedResources.Push(resource);
         }
 
@@ -51,8 +64,13 @@ namespace Game.Code.Logic.Buildings
             _visualResourceFillers[_currentResourceIndex].gameObject.SetActive(false);
             _currentResourceIndex--;
             
+            ClearReservedPlace();
+            
             return _storedResources.Pop();
         }
+
+        public Transform GetInteractionPoint() => 
+            _interactionPoint;
 
         private void GenerateResourceFillers()
         {
@@ -61,7 +79,7 @@ namespace Game.Code.Logic.Buildings
             float yStart = 0;
 
             float xOffset = 3.5f;
-            float yOffset = 0.75f;
+            float yOffset = 0.65f;
             
             int width = 2;
             int height = 3;
