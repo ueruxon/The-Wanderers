@@ -91,7 +91,7 @@ namespace Game.Code.Logic.ResourcesLogic
             if (_resourceType == ResourceType.Coal)
                 Gizmos.color = Color.cyan;
 
-            Gizmos.DrawSphere(transform.position, 1f);
+            Gizmos.DrawSphere(transform.position, .5f);
         }
     }
 }

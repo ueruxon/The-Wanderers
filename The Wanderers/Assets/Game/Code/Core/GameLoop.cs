@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Game.Code.Commander;
 using Game.Code.Common;
 using Game.Code.Logic.Buildings;
+using Game.Code.Logic.Camera;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Units;
 using Game.Code.Services.UnitTask;
@@ -12,6 +13,8 @@ namespace Game.Code.Core
 {
     public class GameLoop : MonoBehaviour, ICoroutineRunner
     {
+        [SerializeField] private CameraController _cameraController;
+        
         [SerializeField] private Storage _storage;
         [SerializeField] private Unit _unitPrefab;
 
@@ -31,6 +34,8 @@ namespace Game.Code.Core
         
         private void Awake()
         {
+            _cameraController.Init();
+            
             // глобальный контекст должен быть доступен из любого места? Сервис?
             _dynamicGameContext = new DynamicGameContext(_resourceSpawners);
             _taskService = new UnitTaskService(_resourceSpawners, _dynamicGameContext, this);
