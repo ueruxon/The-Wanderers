@@ -12,7 +12,7 @@ namespace Game.Code.Logic.UtilityAI.Considerations
         {
             if (context.ActionCommand is GrabResourceCommand)
             {
-                Score = context.IsPlacementObject ? 1 : 0;
+                Score = context.Sensor.IsPlacementObject() ? 1 : 0;
                 return Score;
             }
             

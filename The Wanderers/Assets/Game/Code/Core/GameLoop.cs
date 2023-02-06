@@ -73,7 +73,7 @@ namespace Game.Code.Core
             // для теста
             if (Input.GetKeyDown(KeyCode.K))
             {
-                Vector3 pos = new Vector3(34, 0, 5);
+                Vector3 pos = new Vector3(57, 0, 20);
                 Storage storage = Instantiate(_storagePrefab, pos, Quaternion.identity);
                 // ивент создания??
                 OnStorageBuilt(storage);
@@ -82,7 +82,7 @@ namespace Game.Code.Core
             // для теста
             if (Input.GetKeyDown(KeyCode.L))
             {
-                Vector3 pos = new Vector3(34, 0, 15);
+                Vector3 pos = new Vector3(34, 0, 37);
                 Storage storage = Instantiate(_storagePrefab, pos, Quaternion.identity);
                 // ивент создания??
                 OnStorageBuilt(storage);

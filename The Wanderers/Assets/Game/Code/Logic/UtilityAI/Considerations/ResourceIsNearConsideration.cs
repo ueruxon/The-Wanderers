@@ -12,7 +12,7 @@ namespace Game.Code.Logic.UtilityAI.Considerations
         {
             if (context.ActionCommand is GrabResourceCommand)
             {
-                if (context.IsResourceObject && context.PickupResource is null)
+                if (context.Sensor.IsResourceObject() && context.PickupResource is null)
                 {
                     Score = 1;
                     return Score;

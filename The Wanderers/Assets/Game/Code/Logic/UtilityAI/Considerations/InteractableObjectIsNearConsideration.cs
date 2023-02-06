@@ -12,7 +12,7 @@ namespace Game.Code.Logic.UtilityAI.Considerations
         {
             if (context.ActionCommand is ChopTreeCommand)
             {
-                Score = context.IsInteractionObject ? 1 : 0;
+                Score = context.Sensor.IsInteractionObject() ? 1 : 0;
                 return Score;
             }
             

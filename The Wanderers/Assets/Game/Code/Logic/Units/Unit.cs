@@ -43,17 +43,16 @@ namespace Game.Code.Logic.Units
             _animatorController = GetComponent<Animator>();
             _movementSystem.Init(_behaviorData.MovementProps);
 
-            _aiContext = new AIContext(_dynamicGameContext, _movementSystem, _behaviorData, _animatorController, this);
-            
+            _aiSensor.Init();
+            _aiContext = new AIContext(_dynamicGameContext, _movementSystem, _aiSensor, _behaviorData, _animatorController, this);
+
             _aiPlanner = GetComponent<AIPlanner>();
             _aiPlanner.Init(this, dynamicGameContext, _aiContext, _taskService);
             _aiPlanner.TaskCompleted += OnUnitTaskCompleted;
             _aiPlanner.TaskReceived += OnUnitTaskReceived;
-            
+
             _aiBrain = GetComponent<AIBrain>();
             _aiBrain.Init(_aiContext, _aiPlanner);
-            
-            _aiSensor.Init(_aiContext);
             
             _attachedResource.Init(transform);
 
@@ -90,10 +89,8 @@ namespace Game.Code.Logic.Units
             _aiBrain.Decide();
         }
 
-        private void FixedUpdate()
-        {
-            _aiSensor.Find();
-        }
+        private void FixedUpdate() => 
+            _aiSensor.FindObjects();
 
         private void SetState(UnitState nextState) => 
             _currentState = nextState;
@@ -119,6 +116,7 @@ namespace Game.Code.Logic.Units
     public class BehaviorData
     {
         public MovementProperties MovementProps;
+        public int InventoryCapacity;
     }
 
     [Serializable]

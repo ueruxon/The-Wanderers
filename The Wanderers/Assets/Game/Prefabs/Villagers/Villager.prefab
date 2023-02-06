@@ -385,7 +385,6 @@ MonoBehaviour:
       AngularSpeed: 1200
       Acceleration: 500
       StoppingDistance: 3
-  _testAttachPoint: {fileID: 0}
   _attachedResource: {fileID: 8172283395172297366}
   _currentState: 0
 --- !u!114 &6961387923947132342

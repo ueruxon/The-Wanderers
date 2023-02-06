@@ -1,5 +1,4 @@
-﻿using System;
-using Game.Code.Logic.UtilityAI.Context;
+﻿using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
 
 namespace Game.Code.Logic.UtilityAI
@@ -17,83 +16,51 @@ namespace Game.Code.Logic.UtilityAI
 
         private readonly Collider[] _colliders = new Collider[3];
 
-        public void Init(AIContext aiContext)
+        private int _nearbyObjectCount;
+
+        public void Init()
         {
-            _aiContext = aiContext;
+            _nearbyObjectCount = 0;
             
             _interactableObjectLayer = LayerMask.NameToLayer("InteractableObject");
             _placementObjectLayer = LayerMask.NameToLayer("PlacementObject");
             _resourceLayer = LayerMask.NameToLayer("Resource");
         }
 
-        // private void FixedUpdate()
-        // {
-        //     int count = Physics.OverlapSphereNonAlloc(
-        //         transform.position, _checkInteractableObjectRadius,
-        //         _interactableColliders, _interactableObjectMask, QueryTriggerInteraction.Ignore);
-        //
-        //     if (count > 0)
-        //     {
-        //         for (int i = 0; i < _interactableColliders.Length; i++)
-        //         {
-        //             if (ReferenceEquals(_interactableColliders[i], null) == false)
-        //             {
-        //                 int hitLayer = _interactableColliders[i].gameObject.layer;
-        //                 
-        //                 print(_interactableColliders[i].gameObject);
-        //                 
-        //                 if (hitLayer == _interactableObjectLayer)
-        //                     _aiContext.IsInteractionObject = true;
-        //
-        //                 if (hitLayer == _resourceLayer)
-        //                     _aiContext.IsResourceObject = true;
-        //
-        //                 if (hitLayer == _placementObjectLayer)
-        //                     _aiContext.IsPlacementObject = true;
-        //             }
-        //         }
-        //     }
-        //     else
-        //     {
-        //         DisableAll();
-        //     }
-        // }
+        public void FindObjects() => 
+            _nearbyObjectCount = Physics.OverlapSphereNonAlloc(transform.position, _searchRadius, _colliders, _interactableObjectMask);
 
-        public void Find()
+        public bool IsInteractionObject()
         {
-            SetFalseAll();
-            
-            int count = Physics.OverlapSphereNonAlloc(transform.position, _searchRadius, _colliders, _interactableObjectMask);
-
-            if (count == 0)
-                return;
-
-            for (int i = 0; i < _colliders.Length; i++)
+            for (int i = 0; i < _nearbyObjectCount; i++)
             {
-                if (ReferenceEquals(_colliders[i], null) == false)
-                {
-                    int hitLayer = _colliders[i].gameObject.layer;
-                    
-                    if (hitLayer == _interactableObjectLayer)
-                        _aiContext.IsInteractionObject = true;
-                    
-                    if (hitLayer == _resourceLayer)
-                        _aiContext.IsResourceObject = true;
-                    
-                    if (hitLayer == _placementObjectLayer)
-                        _aiContext.IsPlacementObject = true;
-                }
+                if (_interactableObjectLayer == _colliders[i].gameObject.layer)
+                    return true;
             }
-
-            for (int i = 0; i < _colliders.Length; i++) 
-                _colliders[i] = null;
+            
+            return false;
         }
-
-        private void SetFalseAll()
+        
+        public bool IsResourceObject()
         {
-            _aiContext.IsInteractionObject = false;
-            _aiContext.IsResourceObject = false;
-            _aiContext.IsPlacementObject = false;
+            for (int i = 0; i < _nearbyObjectCount; i++)
+            {
+                if (_resourceLayer == _colliders[i].gameObject.layer)
+                    return true;
+            }
+            
+            return false;
+        }
+        
+        public bool IsPlacementObject()
+        {
+            for (int i = 0; i < _nearbyObjectCount; i++)
+            {
+                if (_placementObjectLayer == _colliders[i].gameObject.layer)
+                    return true;
+            }
+            
+            return false;
         }
 
         private void OnDrawGizmosSelected()
