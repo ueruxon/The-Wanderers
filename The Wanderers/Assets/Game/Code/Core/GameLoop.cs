@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using Game.Code.Commander;
 using Game.Code.Common;
 using Game.Code.Logic.Buildings;
 using Game.Code.Logic.Camera;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Units;
+using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Services.UnitTask;
 using UnityEngine;
 
@@ -26,7 +26,6 @@ namespace Game.Code.Core
     
         private DynamicGameContext _dynamicGameContext;
         private UnitTaskService _taskService;
-
         
         // для теста
         [SerializeField] private UnitCommandType _command;
@@ -37,7 +36,7 @@ namespace Game.Code.Core
             _cameraController.Init();
             
             // глобальный контекст должен быть доступен из любого места? Сервис?
-            _dynamicGameContext = new DynamicGameContext(_resourceSpawners);
+            _dynamicGameContext = new DynamicGameContext();
             _taskService = new UnitTaskService(_resourceSpawners, _dynamicGameContext, this);
 
             foreach (ResourceNodeSpawner nodeSpawner in _resourceSpawners)

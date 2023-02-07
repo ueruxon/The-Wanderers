@@ -1,4 +1,4 @@
-﻿using Game.Code.Commander;
+﻿using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
 
@@ -10,12 +10,15 @@ namespace Game.Code.Logic.UtilityAI.Considerations
     {
         public override float GetScore(AIContext context)
         {
-            if (context.ActionCommand is ChopTreeCommand)
+            if (context.IsGlobalCommand)
             {
-                Score = context.Sensor.IsInteractionObject() ? 1 : 0;
-                return Score;
+                if (context.ActionCommand is ChopTreeCommand)
+                {
+                    Score = context.Sensor.IsInteractionObject() ? 1 : 0;
+                    return Score;
+                }
             }
-            
+
             Score = 0;
             return Score;
         }

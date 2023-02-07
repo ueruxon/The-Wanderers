@@ -47,6 +47,7 @@ namespace Game.Code.Logic.UtilityAI
                         break;
                     case ActionStatus.Completed:
                         //SetAction(null);
+                        _currentAction.OnCompleted(_aiContext);
                         break;
                 }
             }
@@ -55,30 +56,6 @@ namespace Game.Code.Logic.UtilityAI
             
             if (bestAction.IsActive())
                 SetAction(bestAction);
-
-            // if (bestAction.IsActive())
-            // {
-            //     SetAction(bestAction);
-            //     
-            //     if (_currentAction is not null)
-            //     {
-            //         ActionStatus actionStatus = _currentAction.GetActionStatus();
-            //
-            //         switch (actionStatus)
-            //         {
-            //             case ActionStatus.Running:
-            //                 _currentAction.Execute(_aiContext);
-            //                 break;
-            //             case ActionStatus.Failed:
-            //                 _currentAction.OnFailed(_aiContext);
-            //                 break;
-            //             case ActionStatus.Completed:
-            //                 //SetAction(null);
-            //                 break;
-            //         }
-            //     }
-            //     
-            // }
         }
 
         // Решаем, какое действие сейчас наилучшее
@@ -106,10 +83,14 @@ namespace Game.Code.Logic.UtilityAI
 
         private void SetAction(UtilityAction utilityAction)
         {
+            if (_currentAction is null)
+                _currentAction = utilityAction;
+            
             if (!Equals(_currentAction, utilityAction))
             {
+                _currentAction.OnExit(_aiContext);
                 _currentAction = utilityAction;
-                _currentAction?.OnEnter(_aiContext);
+                _currentAction.OnEnter(_aiContext);
             }
         }
     }

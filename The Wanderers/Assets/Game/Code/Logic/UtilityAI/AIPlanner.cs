@@ -1,7 +1,7 @@
 ﻿using System;
-using Game.Code.Commander;
 using Game.Code.Core;
 using Game.Code.Logic.Units;
+using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;
 using Game.Code.Services.UnitTask;
 using UnityEngine;
@@ -43,10 +43,10 @@ namespace Game.Code.Logic.UtilityAI
         private void OnNotifyUnitAboutTask()
         {
             if (_currentUnit.IsAvailable()) 
-                ExecuteTask();
+                TryExecuteTask();
         }
 
-        private void ExecuteTask()
+        private bool TryExecuteTask()
         {
             if (_taskService.HasTask())
             {
@@ -54,17 +54,24 @@ namespace Game.Code.Logic.UtilityAI
                 _aiContext.SetActionCommand(_currentTask.GetCommand());
             
                 TaskReceived?.Invoke(_aiContext);
+                return true;
             }
+
+            return false;
         }
 
         public void CompleteCurrentTask()
         {
             _currentTask.SetTaskStatus(TaskStatus.Completed);
             TaskCompleted?.Invoke(_currentTask);
-            
-            _currentTask = _baseIdleTask;
-            _aiContext.SetActionCommand(_baseIdleCommand);
-            _aiContext.MoveTarget = _baseIdleCommand.Target;
+
+            // пробуем взять новую задачу
+            if (TryExecuteTask() == false)
+            {
+                _currentTask = _baseIdleTask;
+                _aiContext.SetActionCommand(_baseIdleCommand);
+                _aiContext.MoveTarget = _baseIdleCommand.Target;
+            }
         }
 
         public void Cleanup() => 

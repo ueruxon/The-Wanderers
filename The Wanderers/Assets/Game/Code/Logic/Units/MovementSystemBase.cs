@@ -13,9 +13,11 @@ namespace Game.Code.Logic.Units
         
         public abstract bool ReachedDestination();
 
+        public virtual float GetRemainingDistance() => 
+            NavAgent.remainingDistance;
+
         public abstract void SetDestination(Vector3 destination);
-
-
+        
         public abstract void Stop();
     }
 }

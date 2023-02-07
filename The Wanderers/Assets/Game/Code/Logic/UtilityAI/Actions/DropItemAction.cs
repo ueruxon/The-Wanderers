@@ -1,5 +1,5 @@
-﻿using Game.Code.Commander;
-using Game.Code.Logic.Buildings;
+﻿using Game.Code.Logic.Buildings;
+using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;
 
 namespace Game.Code.Logic.UtilityAI.Actions

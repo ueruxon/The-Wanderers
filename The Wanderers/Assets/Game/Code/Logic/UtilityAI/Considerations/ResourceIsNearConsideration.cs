@@ -1,4 +1,4 @@
-﻿using Game.Code.Commander;
+﻿using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
 
@@ -10,15 +10,18 @@ namespace Game.Code.Logic.UtilityAI.Considerations
     {
         public override float GetScore(AIContext context)
         {
-            if (context.ActionCommand is GrabResourceCommand)
+            if (context.IsGlobalCommand)
             {
-                if (context.Sensor.IsResourceObject() && context.PickupResource is null)
+                if (context.ActionCommand is GrabResourceCommand)
                 {
-                    Score = 1;
-                    return Score;
+                    if (context.Sensor.IsResourceObject() && context.PickupResource is null)
+                    {
+                        Score = 1;
+                        return Score;
+                    }
                 }
             }
-            
+
             Score = 0;
             return Score;
         }

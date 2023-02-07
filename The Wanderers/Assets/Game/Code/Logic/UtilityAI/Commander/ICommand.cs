@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-namespace Game.Code.Commander
+namespace Game.Code.Logic.UtilityAI.Commander
 {
     public interface ICommand
     {

@@ -7,14 +7,11 @@ namespace Game.Code.Core
     // глобальный контекст игры, который содержит данные о сессии
     public class DynamicGameContext
     {
-        private readonly List<ResourceNodeSpawner> _resourceSpawners;
         private readonly Dictionary<ResourceType, List<Storage>> _storagesByType;
         private readonly Dictionary<ResourceType, Queue<Resource>> _minedResourcesByType;
 
-        public DynamicGameContext(List<ResourceNodeSpawner> resourceSpawners)
+        public DynamicGameContext()
         {
-            _resourceSpawners = resourceSpawners;
-
             _minedResourcesByType = new Dictionary<ResourceType, Queue<Resource>>
             {
                 [ResourceType.Food] = new(),

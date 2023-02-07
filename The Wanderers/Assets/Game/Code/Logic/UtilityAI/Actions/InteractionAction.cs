@@ -1,5 +1,5 @@
-﻿using Game.Code.Commander;
-using Game.Code.Common;
+﻿using Game.Code.Common;
+using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
 

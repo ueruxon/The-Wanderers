@@ -48,6 +48,9 @@ namespace Game.Code.Logic.UtilityAI
         
         public virtual void OnCompleted(AIContext context) => 
             CurrentActionStatus = ActionStatus.Completed;
+        
+        public virtual void OnExit(AIContext context) => 
+            CurrentActionStatus = ActionStatus.Completed;
 
         protected virtual void MoveTo(AIContext context, Vector3 target) { }
 

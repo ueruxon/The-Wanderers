@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
-using Game.Code.Commander;
 using Game.Code.Core;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Units;
+using Game.Code.Logic.UtilityAI.Commander;
 using UnityEngine;
 
 namespace Game.Code.Logic.UtilityAI.Context
@@ -29,11 +29,10 @@ namespace Game.Code.Logic.UtilityAI.Context
         }
 
         public MovementSystemBase MovementSystem { get; }
-        public Unit CurrentUnit { get; private set; }
+        public Unit CurrentUnit { get; }
         public Resource PickupResource { get; private set;}
         public ICommand ActionCommand { get; private set;}
-
-        private List<Resource> _inventory;
+        public bool IsGlobalCommand { get; private set; }
 
         public AIContext(DynamicGameContext dynamicGameContext, MovementSystemBase movementSystemBase,
             AISensor aiSensor, BehaviorData behaviorData, Animator animatorController, Unit unit)
@@ -45,12 +44,11 @@ namespace Game.Code.Logic.UtilityAI.Context
             
             MovementSystem = movementSystemBase;
             CurrentUnit = unit;
-
-            _inventory = new List<Resource>(_behaviorData.InventoryCapacity);
+            
             MoveTarget = CurrentUnit.transform;
         }
 
-        public DynamicGameContext GetGlobalContext() => 
+        public DynamicGameContext GetGlobalDynamicContext() => 
             _dynamicGameContext;
 
         // нужна какая-то дата конкретно для этого монобеха
@@ -63,17 +61,10 @@ namespace Game.Code.Logic.UtilityAI.Context
         public void SetPickupResource(Resource availableResource) => 
             PickupResource = availableResource;
 
-        public void SetActionCommand(ICommand command) => 
+        public void SetActionCommand(ICommand command)
+        {
             ActionCommand = command;
-
-        public bool InventoryIsFull() => 
-            _inventory.Count == _behaviorData.InventoryCapacity;
-        
-        public void AddResourceToInventory(Resource resource) =>
-            _inventory.Add(resource);
-
-        public void RemoveResourceFromInventory(Resource resource) =>
-            _inventory.Remove(resource);
-
+            IsGlobalCommand = command is not IdleCommand;
+        }
     }
 }

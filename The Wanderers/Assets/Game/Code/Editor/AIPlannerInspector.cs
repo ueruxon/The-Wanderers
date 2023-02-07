@@ -1,5 +1,5 @@
-﻿using Game.Code.Commander;
-using Game.Code.Logic.UtilityAI;
+﻿using Game.Code.Logic.UtilityAI;
+using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Services.UnitTask;
 using UnityEditor;
 using UnityEngine;

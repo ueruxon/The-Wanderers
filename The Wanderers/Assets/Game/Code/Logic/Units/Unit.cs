@@ -116,7 +116,6 @@ namespace Game.Code.Logic.Units
     public class BehaviorData
     {
         public MovementProperties MovementProps;
-        public int InventoryCapacity;
     }
 
     [Serializable]

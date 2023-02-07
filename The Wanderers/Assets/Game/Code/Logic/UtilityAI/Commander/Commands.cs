@@ -1,9 +1,8 @@
-﻿using System;
-using Game.Code.Logic.Buildings;
+﻿using Game.Code.Logic.Buildings;
 using Game.Code.Logic.ResourcesLogic;
 using UnityEngine;
 
-namespace Game.Code.Commander
+namespace Game.Code.Logic.UtilityAI.Commander
 {
     public struct IdleCommand : ICommand
     { 
