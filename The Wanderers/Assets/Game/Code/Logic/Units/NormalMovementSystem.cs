@@ -30,16 +30,6 @@ namespace Game.Code.Logic.Units
             }
 
             return false;
-            
-            // if (NavAgent.pathPending)
-            //     return false;
-            //
-            // Debug.Log($"remaining: {NavAgent.remainingDistance}, stopping: {NavAgent.stoppingDistance}, {NavAgent.remainingDistance < NavAgent.stoppingDistance}");
-            //
-            // if (NavAgent.remainingDistance < NavAgent.stoppingDistance)
-            //     return false;
-            //
-            // return NavAgent.hasPath == false || NavAgent.velocity.sqrMagnitude == 0f;
         }
 
         public override void SetDestination(Vector3 destination) => 

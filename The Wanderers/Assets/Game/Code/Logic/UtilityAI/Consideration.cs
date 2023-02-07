@@ -18,7 +18,7 @@ namespace Game.Code.Logic.UtilityAI
             set => _score = Mathf.Clamp01(value);
         }
 
-        public void Init()
+        public virtual void Init()
         {
             Score = TestValue;
         }

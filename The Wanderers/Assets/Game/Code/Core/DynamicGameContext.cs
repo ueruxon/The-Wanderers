@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using Game.Code.Logic.Buildings;
 using Game.Code.Logic.ResourcesLogic;
+using Game.Code.Logic.Units;
 
 namespace Game.Code.Core
 {
@@ -9,6 +10,8 @@ namespace Game.Code.Core
     {
         private readonly Dictionary<ResourceType, List<Storage>> _storagesByType;
         private readonly Dictionary<ResourceType, Queue<Resource>> _minedResourcesByType;
+
+        private readonly Queue<Unit> _homelessUnits;
 
         public DynamicGameContext()
         {
@@ -27,6 +30,8 @@ namespace Game.Code.Core
                 [ResourceType.Wood] = new(),
                 [ResourceType.Coal] = new()
             };
+            
+            _homelessUnits = new Queue<Unit>();
         }
         
         public void AddMinedResourceInQueue(Resource resource) => 
@@ -46,5 +51,14 @@ namespace Game.Code.Core
         
         public List<Storage> GetStoragesByType(ResourceType type) => 
             _storagesByType[type];
+
+        public void AddHomelessUnit(Unit unit) =>
+            _homelessUnits.Enqueue(unit);
+        
+        public int GetHomelessCount() => 
+            _homelessUnits.Count;
+        
+        public Unit GetHomelessUnit() => 
+            _homelessUnits.Dequeue();
     }
 }

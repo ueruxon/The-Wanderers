@@ -14,16 +14,22 @@ namespace Game.Code.Core
     public class GameLoop : MonoBehaviour, ICoroutineRunner
     {
         [SerializeField] private CameraController _cameraController;
-        
-        [SerializeField] private Storage _storage;
-        [SerializeField] private Unit _unitPrefab;
 
-        
+        [SerializeField] private Unit _unitPrefab;
+        [SerializeField] private int _unitsCount = 3;
+        [Space(8)]
+
+
+        [SerializeField] private House _housePrefab;
+        [SerializeField] private List<House> _testHouses;
+        [Space(8)]
+
         [SerializeField] private Storage _storagePrefab;
         [SerializeField] private List<Storage> _storages;
+        [Space(8)]
+
         [SerializeField] private List<ResourceNodeSpawner> _resourceSpawners;
-        [SerializeField] private int _unitsCount = 3;
-    
+
         private DynamicGameContext _dynamicGameContext;
         private UnitTaskService _taskService;
         
@@ -45,8 +51,11 @@ namespace Game.Code.Core
                 nodeSpawner.ResourceSpawned += OnResourceSpawned;
             }
 
-            foreach (Storage storage in _storages) 
+            foreach (Storage storage in _storages)
+            {
+                storage.Init();
                 _dynamicGameContext.AddStorageInList(storage);
+            }
 
             for (int i = 0; i < _unitsCount; i++)
             {
@@ -58,6 +67,17 @@ namespace Game.Code.Core
                 Unit unit = Instantiate(_unitPrefab, spawnPoint, Quaternion.identity);
                 unit.Init(_dynamicGameContext, _taskService);
                 unit.name = $"Unit {i + 1}";
+                
+                // должна делать фабрика
+                _dynamicGameContext.AddHomelessUnit(unit);
+            }
+
+            
+            // для теста домов
+            foreach (House house in _testHouses)
+            {
+                house.Init();
+                OnHouseBuilt(house);
             }
         }
         
@@ -74,6 +94,7 @@ namespace Game.Code.Core
             {
                 Vector3 pos = new Vector3(57, 0, 20);
                 Storage storage = Instantiate(_storagePrefab, pos, Quaternion.identity);
+                storage.Init();
                 // ивент создания??
                 OnStorageBuilt(storage);
             }
@@ -83,8 +104,19 @@ namespace Game.Code.Core
             {
                 Vector3 pos = new Vector3(34, 0, 37);
                 Storage storage = Instantiate(_storagePrefab, pos, Quaternion.identity);
+                storage.Init();
                 // ивент создания??
                 OnStorageBuilt(storage);
+            }
+            
+            // для теста
+            if (Input.GetKeyDown(KeyCode.J))
+            {
+                Vector3 pos = new Vector3(25.48f, 0, -25);
+                House house = Instantiate(_housePrefab, pos, Quaternion.identity);
+                house.Init();
+                // ивент создания??
+                OnHouseBuilt(house);
             }
         }
         
@@ -118,6 +150,28 @@ namespace Game.Code.Core
             }
         }
 
+        private void OnHouseBuilt(House house)
+        {
+            if (_dynamicGameContext.GetHomelessCount() > 0)
+            {
+                int homelessUnitCount = _dynamicGameContext.GetHomelessCount();
+
+                for (int i = 0; i < homelessUnitCount; i++)
+                {
+                    Unit homeless = _dynamicGameContext.GetHomelessUnit();
+
+                    if (house.CanRegisterUnit())
+                    {
+                        house.RegisterUnit(homeless);
+                        homeless.RegisterHome(house);
+                        continue;
+                    }
+                    
+                    _dynamicGameContext.AddHomelessUnit(homeless);
+                }
+            }
+        }
+        
         private bool TryAddResourceInStorage(Resource resource)
         {
             List<Storage> storages = _dynamicGameContext.GetStoragesByType(resource.GetResourceType());

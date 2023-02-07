@@ -19,5 +19,8 @@ namespace Game.Code.Logic.Units
         public abstract void SetDestination(Vector3 destination);
         
         public abstract void Stop();
+
+        public virtual void SetActive(bool active) => 
+            NavAgent.enabled = active;
     }
 }

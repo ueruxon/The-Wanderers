@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Game.Code.Core;
+using Game.Code.Logic.Buildings;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Units;
 using Game.Code.Logic.UtilityAI.Commander;
@@ -7,6 +8,7 @@ using UnityEngine;
 
 namespace Game.Code.Logic.UtilityAI.Context
 {
+    // контекст с данными конкретно для этого юнита
     public class AIContext
     {
         private readonly DynamicGameContext _dynamicGameContext;
@@ -33,6 +35,9 @@ namespace Game.Code.Logic.UtilityAI.Context
         public Resource PickupResource { get; private set;}
         public ICommand ActionCommand { get; private set;}
         public bool IsGlobalCommand { get; private set; }
+
+        private House _houseProperty;
+        public bool Homeowner;
 
         public AIContext(DynamicGameContext dynamicGameContext, MovementSystemBase movementSystemBase,
             AISensor aiSensor, BehaviorData behaviorData, Animator animatorController, Unit unit)
@@ -66,5 +71,14 @@ namespace Game.Code.Logic.UtilityAI.Context
             ActionCommand = command;
             IsGlobalCommand = command is not IdleCommand;
         }
+
+        public void RegisterHome(House house)
+        {
+            Homeowner = true;
+            _houseProperty = house;
+        }
+
+        public House GetHouse() => 
+            _houseProperty;
     }
 }

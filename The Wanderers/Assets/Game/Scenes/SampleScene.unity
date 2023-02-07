@@ -259,6 +259,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: House (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 1066066199949600011, guid: 52d4dee9d4cb0ef4a9a29c15d7cb8e89,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52d4dee9d4cb0ef4a9a29c15d7cb8e89, type: 3}
 --- !u!1 &183989277
@@ -1010,6 +1015,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: House (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1066066199949600011, guid: 52d4dee9d4cb0ef4a9a29c15d7cb8e89,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52d4dee9d4cb0ef4a9a29c15d7cb8e89, type: 3}
@@ -2523,6 +2533,18 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 892745011}
   m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!114 &894820095 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 5502533130734335481, guid: 52d4dee9d4cb0ef4a9a29c15d7cb8e89,
+    type: 3}
+  m_PrefabInstance: {fileID: 2849191832506137087}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0487ee3cae1f4d99b43ca23b804564d4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &936568120 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1970911380268447951, guid: a2ee169cb7b4f0a4da933e4e421d420a,
@@ -3486,16 +3508,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _cameraController: {fileID: 1229937158}
-  _storage: {fileID: 1367409667}
   _unitPrefab: {fileID: 6961387923947132343, guid: 4238c43c67a2f3140b26f598334b8582,
     type: 3}
+  _unitsCount: 2
+  _housePrefab: {fileID: 5502533130734335481, guid: 52d4dee9d4cb0ef4a9a29c15d7cb8e89,
+    type: 3}
+  _testHouses:
+  - {fileID: 894820095}
   _storagePrefab: {fileID: 3650771869348849352, guid: 1b991dce5ea39d34db58a78869f614b4,
     type: 3}
   _storages:
   - {fileID: 1367409667}
   _resourceSpawners:
   - {fileID: 833704232}
-  _unitsCount: 1
   _command: 0
 --- !u!4 &1278829214
 Transform:
@@ -4572,6 +4597,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: House (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1066066199949600011, guid: 52d4dee9d4cb0ef4a9a29c15d7cb8e89,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 52d4dee9d4cb0ef4a9a29c15d7cb8e89, type: 3}

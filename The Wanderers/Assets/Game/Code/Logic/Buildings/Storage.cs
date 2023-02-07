@@ -23,7 +23,7 @@ namespace Game.Code.Logic.Buildings
         private int _currentResourceIndex;
         private int _reservedPlaceCount;
 
-        private void Awake()
+        public void Init()
         {
             _storedResources = new Stack<Resource>(StorageCapacity);
             _visualResourceFillers = new Transform[StorageCapacity];

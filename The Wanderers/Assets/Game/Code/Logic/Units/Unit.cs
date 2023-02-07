@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Code.Core;
+using Game.Code.Logic.Buildings;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.UtilityAI;
 using Game.Code.Logic.UtilityAI.Context;
@@ -23,7 +24,7 @@ namespace Game.Code.Logic.Units
         [SerializeField] private MovementSystemBase _movementSystem;
         [SerializeField] private BehaviorData _behaviorData;
         [SerializeField] private AttachedResource _attachedResource;
-
+        
         private DynamicGameContext _dynamicGameContext;
         private IUnitTaskService _taskService;
 
@@ -34,7 +35,7 @@ namespace Game.Code.Logic.Units
         private Animator _animatorController;
         private Resource _resourceInHand;
 
-        public UnitState _currentState;
+        private UnitState _currentState;
         
         public void Init(DynamicGameContext dynamicGameContext, IUnitTaskService taskService)
         {
@@ -67,21 +68,28 @@ namespace Game.Code.Logic.Units
             return false;
         }
 
-        public void AttachResource(Resource resource)
-        {
+        public void AttachResource(Resource resource) => 
             _attachedResource.Attach(resource);
-            
-            // _resourceInHand = resource;
-            // _resourceInHand.transform.SetParent(_testAttachPoint);
-            // _resourceInHand.transform.position = _testAttachPoint.position;
+
+        public void DetachResource() => 
+            _attachedResource.Detach();
+
+        public void RegisterHome(House house) => 
+            _aiContext.RegisterHome(house);
+
+        
+        public void Hide()
+        {
+            _animatorController.enabled = false;
+            _behaviorData.Visual.SetActive(false);
+            //_movementSystem.SetActive(false);
         }
 
-        public void DetachResource()
+        public void Show()
         {
-            _attachedResource.Detach();
-            
-            // Destroy(_resourceInHand.gameObject);
-            // _resourceInHand = null;
+            _animatorController.enabled = true;
+            _behaviorData.Visual.SetActive(true);
+            //_movementSystem.SetActive(true);
         }
 
         private void Update()
@@ -89,8 +97,10 @@ namespace Game.Code.Logic.Units
             _aiBrain.Decide();
         }
 
-        private void FixedUpdate() => 
+        private void FixedUpdate()
+        {
             _aiSensor.FindObjects();
+        }
 
         private void SetState(UnitState nextState) => 
             _currentState = nextState;
@@ -116,6 +126,7 @@ namespace Game.Code.Logic.Units
     public class BehaviorData
     {
         public MovementProperties MovementProps;
+        public GameObject Visual;
     }
 
     [Serializable]
