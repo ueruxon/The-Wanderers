@@ -9,36 +9,46 @@ namespace Game.Code.Logic.UtilityAI
         [SerializeField] private string _actionName;
         [SerializeField, Range(0f, 1f)] private float _weight;
 
-        [SerializeField] private List<Consideration> _considerations;
+        [SerializeField] private List<Consideration> _considerationsTemplates;
         [SerializeField] protected ActionStatus CurrentActionStatus;
         
         protected AIPlanner AIPlanner;
         
+        private List<Consideration> _actionConsiderations;
+
         private float _score;
         public float Score
         {
             get => _score;
-            set => _score = Mathf.Clamp01(value);
+            private set => _score = Mathf.Clamp01(value);
         }
 
         // для инспектора
         public float Weight => _weight;
         public float TotalConsiderationScore { get; private set; }
-        
+
         public void Init(AIPlanner aiPlanner)
         {
             AIPlanner = aiPlanner;
             AIPlanner.TaskReceived += OnTaskReceived;
 
-            foreach (Consideration consideration in _considerations) 
+            _actionConsiderations = new List<Consideration>();
+
+            foreach (Consideration templateObject in _considerationsTemplates)
+            {
+                Consideration consideration = Instantiate(templateObject);
                 consideration.Init();
+                consideration.name = templateObject.name;
+                
+                _actionConsiderations.Add(consideration);
+            }
         }
 
         protected virtual void OnTaskReceived(AIContext context) { }
 
         public ActionStatus GetActionStatus() => CurrentActionStatus;
 
-        public List<Consideration> GetConsiderations() => _considerations;
+        public List<Consideration> GetConsiderations() => _actionConsiderations;
 
         public virtual void OnEnter(AIContext context) =>
             CurrentActionStatus = ActionStatus.Running;
@@ -61,9 +71,9 @@ namespace Game.Code.Logic.UtilityAI
             float actionScore = 1f;
             
             // собираем все значения из выбора решений
-            for (int i = 0; i < _considerations.Count; i++)
+            for (int i = 0; i < _actionConsiderations.Count; i++)
             {
-                float considerationScore = _considerations[i].GetScore(context);
+                float considerationScore = _actionConsiderations[i].GetScore(context);
                 actionScore *= considerationScore;
 
                 TotalConsiderationScore = actionScore;
@@ -77,7 +87,7 @@ namespace Game.Code.Logic.UtilityAI
             
             // усредняем значения
             float originalScore = actionScore;
-            float compensationFactor = 1f - (1f / _considerations.Count);
+            float compensationFactor = 1f - (1f / _actionConsiderations.Count);
             float modificationFactor = (1f - originalScore) * compensationFactor;
             float mediateScore = originalScore + (modificationFactor * originalScore);
             // добавляем вес

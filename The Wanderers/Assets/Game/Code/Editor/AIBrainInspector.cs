@@ -55,7 +55,7 @@ namespace Game.Code.Editor
                     string totalConsiderationScore = action.TotalConsiderationScore.ToString("0.00");
                     string actionStatus = action.GetActionStatus().ToString();
                     List<Consideration> considerations = action.GetConsiderations();
-                    
+
                     GUILayout.BeginVertical("HelpBox");
 
                     GUILayout.BeginHorizontal();

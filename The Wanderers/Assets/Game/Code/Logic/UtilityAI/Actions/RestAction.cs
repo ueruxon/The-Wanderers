@@ -21,8 +21,6 @@ namespace Game.Code.Logic.UtilityAI.Actions
 
         public override void Execute(AIContext context)
         {
-            print($"Unit: {context.CurrentUnit.name}, owner: {context.Homeowner}");
-            
             if (context.MovementSystem.ReachedDestination())
             {
                 if (_alreadyRest == false)
@@ -39,8 +37,7 @@ namespace Game.Code.Logic.UtilityAI.Actions
         public override void OnExit(AIContext context)
         {
             base.OnExit(context);
-
-            print("за работу");
+            
             context.CurrentUnit.Show();
             context.GetAnimatorController().SetBool("IsWalking", false);
         }

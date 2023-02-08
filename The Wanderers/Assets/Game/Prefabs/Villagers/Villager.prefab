@@ -124,7 +124,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actionName: 
   _weight: 0.75
-  _considerations:
+  _considerationsTemplates:
   - {fileID: 11400000, guid: 90db084209ceb0049baa6a1c09880b62, type: 2}
   - {fileID: 11400000, guid: f551e710e4449e74a9dae439298f95c4, type: 2}
   CurrentActionStatus: 0
@@ -205,7 +205,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actionName: Rest
   _weight: 0.2
-  _considerations:
+  _considerationsTemplates:
   - {fileID: 11400000, guid: ce76bc4349df2744db271f819d95c497, type: 2}
   - {fileID: 11400000, guid: 92ec6ab75300ed047b491e1594473ef6, type: 2}
   CurrentActionStatus: 0
@@ -255,7 +255,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actionName: Interaction with object
   _weight: 0.4
-  _considerations:
+  _considerationsTemplates:
   - {fileID: 11400000, guid: 73c0658079ef9bf4abae9bb9d013aaaa, type: 2}
   - {fileID: 11400000, guid: 464cccdb71ec19d4fbcad428ab843882, type: 2}
   CurrentActionStatus: 0
@@ -305,7 +305,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actionName: 
   _weight: 0.8
-  _considerations:
+  _considerationsTemplates:
   - {fileID: 11400000, guid: 73c0658079ef9bf4abae9bb9d013aaaa, type: 2}
   - {fileID: 11400000, guid: d52f43996031ecb44b4c0305df4f743f, type: 2}
   CurrentActionStatus: 0
@@ -498,7 +498,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actionName: Idle
   _weight: 0.1
-  _considerations:
+  _considerationsTemplates:
   - {fileID: 11400000, guid: ef074a9f1bafb474482b39b67227afa6, type: 2}
   CurrentActionStatus: 0
 --- !u!1 &6961387924315258509
@@ -547,7 +547,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _actionName: 
   _weight: 0.15
-  _considerations:
+  _considerationsTemplates:
   - {fileID: 11400000, guid: 2742c934bffccbb47895cfdeff4bfa34, type: 2}
   CurrentActionStatus: 0
 --- !u!1 &6961387925736005046

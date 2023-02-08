@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0b6a7f183e6e48969c02ec4178d08e95, type: 3}
-  m_Name: IdleConsideration
+  m_Name: Idle
   m_EditorClassIdentifier: 
   Description: 
   ResponseCurve:
