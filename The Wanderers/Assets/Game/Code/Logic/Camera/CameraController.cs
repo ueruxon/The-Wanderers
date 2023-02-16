@@ -26,7 +26,7 @@ namespace Game.Code.Logic.Camera
         [Header("Camera rotation settings")]
         [SerializeField] private float _maxRotationSpeed = 1f;
         
-        private CameraControl _cameraActions;
+        private PlayerInput _cameraActions;
         private InputAction _movementAction;
 
         // позиция, за которой мы хотим "следовать"
@@ -39,7 +39,7 @@ namespace Game.Code.Logic.Camera
 
         public void Init()
         {
-            _cameraActions = new CameraControl();
+            _cameraActions = new PlayerInput();
             _movementAction = _cameraActions.Camera.Movement;
 
             // вынести события в другой класс типа инпут хендлера

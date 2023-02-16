@@ -80,7 +80,7 @@ namespace Game.Code.Services.UnitTask
             NotifyAllAvailableUnits();
         }
 
-        public void CreateChopTreeTask(Storage storage)
+        public void CreateChopTreeTask()
         {
             foreach (ResourceNodeSpawner nodeSpawner in _chopTrees)
             {
@@ -90,7 +90,7 @@ namespace Game.Code.Services.UnitTask
                     {
                         ResourceNode = nodeSpawner.GetResourceNode(),
                         Target = nodeSpawner.GetResourceNode().transform,
-                        Goal = storage.transform
+                        Goal = nodeSpawner.transform
                     };
 
                     AddTask(new UnitTask(command: chopTreeCommand));

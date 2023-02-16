@@ -633,7 +633,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _interactableObjectMask:
     serializedVersion: 2
-    m_Bits: 448
+    m_Bits: 2496
   _searchRadius: 3
 --- !u!1001 &5570351838456641484
 PrefabInstance:

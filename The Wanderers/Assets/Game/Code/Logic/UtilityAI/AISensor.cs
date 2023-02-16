@@ -12,6 +12,7 @@ namespace Game.Code.Logic.UtilityAI
 
         private int _interactableObjectLayer;
         private int _placementObjectLayer;
+        private int _resourceNodeLayer;
         private int _resourceLayer;
 
         private readonly Collider[] _colliders = new Collider[3];
@@ -24,6 +25,7 @@ namespace Game.Code.Logic.UtilityAI
             
             _interactableObjectLayer = LayerMask.NameToLayer("InteractableObject");
             _placementObjectLayer = LayerMask.NameToLayer("PlacementObject");
+            _resourceNodeLayer = LayerMask.NameToLayer("ResourceNode");
             _resourceLayer = LayerMask.NameToLayer("Resource");
         }
 
@@ -35,6 +37,17 @@ namespace Game.Code.Logic.UtilityAI
             for (int i = 0; i < _nearbyObjectCount; i++)
             {
                 if (_interactableObjectLayer == _colliders[i].gameObject.layer)
+                    return true;
+            }
+            
+            return false;
+        }
+        
+        public bool IsResourceNode()
+        {
+            for (int i = 0; i < _nearbyObjectCount; i++)
+            {
+                if (_resourceNodeLayer == _colliders[i].gameObject.layer)
                     return true;
             }
             

@@ -1,5 +1,5 @@
 {
-    "name": "CameraControl",
+    "name": "PlayerInput",
     "maps": [
         {
             "name": "Camera",
@@ -163,6 +163,85 @@
                     "processors": "",
                     "groups": "",
                     "action": "Zoom",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                }
+            ]
+        },
+        {
+            "name": "Selection",
+            "id": "7195a9c2-7578-4be0-86b2-5b68bbcef3ad",
+            "actions": [
+                {
+                    "name": "Select",
+                    "type": "Button",
+                    "id": "73089b30-f7ba-41fe-90dd-faae643ab2a5",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                },
+                {
+                    "name": "Cancel",
+                    "type": "Button",
+                    "id": "bdb578ca-6664-4f97-b7b6-343bb91dc251",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
+                    "name": "PointerPosition",
+                    "type": "Value",
+                    "id": "f55eb12b-35d4-4cdd-88bf-857b137b1a7b",
+                    "expectedControlType": "Vector2",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": true
+                }
+            ],
+            "bindings": [
+                {
+                    "name": "",
+                    "id": "119a6a87-36f8-4452-acac-488ad9de86a8",
+                    "path": "<Mouse>/leftButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Select",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "69be70c0-806f-4190-93b7-4a6a76d64838",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "c27027ca-a5c4-4419-9584-2412a3cc3ced",
+                    "path": "<Keyboard>/escape",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "Cancel",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "e095660a-ecd0-492b-b945-748044877985",
+                    "path": "<Mouse>/position",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "PointerPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

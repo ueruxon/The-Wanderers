@@ -25,7 +25,6 @@ namespace Game.Code.Logic.UtilityAI.Actions
 
             if (context.MovementSystem.ReachedDestination())
             {
-                print("Выкинул, конец задачи.");
                 // переписать естессна
                 _storage.AddResource(context.PickupResource);
 

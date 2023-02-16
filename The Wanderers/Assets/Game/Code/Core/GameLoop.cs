@@ -1,9 +1,9 @@
-using System;
 using System.Collections.Generic;
 using Game.Code.Common;
 using Game.Code.Logic.Buildings;
 using Game.Code.Logic.Camera;
 using Game.Code.Logic.ResourcesLogic;
+using Game.Code.Logic.Selection;
 using Game.Code.Logic.Units;
 using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Services.UnitTask;
@@ -14,6 +14,7 @@ namespace Game.Code.Core
     public class GameLoop : MonoBehaviour, ICoroutineRunner
     {
         [SerializeField] private CameraController _cameraController;
+        [SerializeField] private SelectionHandler _selectionHandler;
 
         [SerializeField] private Unit _unitPrefab;
         [SerializeField] private int _unitsCount = 3;
@@ -40,6 +41,7 @@ namespace Game.Code.Core
         private void Awake()
         {
             _cameraController.Init();
+            _selectionHandler.Init();
             
             // глобальный контекст должен быть доступен из любого места? Сервис?
             _dynamicGameContext = new DynamicGameContext();
@@ -150,6 +152,7 @@ namespace Game.Code.Core
             }
         }
 
+        // для теста (вынести в другой класс для строительства)
         private void OnHouseBuilt(House house)
         {
             if (_dynamicGameContext.GetHomelessCount() > 0)
@@ -196,7 +199,7 @@ namespace Game.Code.Core
 
             if (_currentCommand == UnitCommandType.ChopTree)
             {
-                _taskService.CreateChopTreeTask(_storages[0]);
+                _taskService.CreateChopTreeTask();
             }
         }
     }

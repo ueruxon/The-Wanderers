@@ -17,6 +17,8 @@ namespace Game.Code.Logic.ResourcesLogic
         [SerializeField] private MMF_Player _demolishFeedback;
         [SerializeField] private MMF_Player _growFeedback;
 
+        private ResourceType _currentType;
+        
         private int _hitToSpawnResource = 3;
 
         private bool _isActive;
@@ -24,8 +26,10 @@ namespace Game.Code.Logic.ResourcesLogic
 
         private Transform _visual;
 
-        public void Init()
+        public void Init(ResourceType resourceType)
         {
+            _currentType = resourceType;
+            
             _isActive = true;
             _isAvailableForWork = true;
             
@@ -46,6 +50,9 @@ namespace Game.Code.Logic.ResourcesLogic
 
         public void InWork() => 
             _isAvailableForWork = false;
+
+        public ResourceType GetNodeType() => 
+            _currentType;
 
         public void Interact()
         {
