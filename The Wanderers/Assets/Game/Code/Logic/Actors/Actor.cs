@@ -1,24 +1,24 @@
 ﻿using System;
 using Game.Code.Core;
+using Game.Code.Infrastructure.Services.UnitTask;
 using Game.Code.Logic.Buildings;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.UtilityAI;
 using Game.Code.Logic.UtilityAI.Context;
-using Game.Code.Services.UnitTask;
 using UnityEngine;
 
 namespace Game.Code.Logic.Units
 {
-    public enum UnitState
+    public enum ActorState
     {
         Idle,
         Working
     }
     
     [RequireComponent(typeof(AIBrain), typeof(AIPlanner))]
-    public class Unit : MonoBehaviour
+    public class Actor : MonoBehaviour
     {
-        public event Action<Unit, UnitTask> TaskCompleted;
+        public event Action<Actor, GlobalActorTask> TaskCompleted;
 
         [SerializeField] private AISensor _aiSensor;
         [SerializeField] private MovementSystemBase _movementSystem;
@@ -35,7 +35,7 @@ namespace Game.Code.Logic.Units
         private Animator _animatorController;
         private Resource _resourceInHand;
 
-        private UnitState _currentState;
+        private ActorState _currentState;
         
         public void Init(DynamicGameContext dynamicGameContext, IUnitTaskService taskService)
         {
@@ -57,12 +57,12 @@ namespace Game.Code.Logic.Units
             
             _attachedResource.Init(transform);
 
-            SetState(UnitState.Idle);
+            SetState(ActorState.Idle);
         }
 
         public bool IsAvailable()
         {
-            if (_currentState != UnitState.Working)
+            if (_currentState != ActorState.Working)
                 return true;
 
             return false;
@@ -102,15 +102,15 @@ namespace Game.Code.Logic.Units
             _aiSensor.FindObjects();
         }
 
-        private void SetState(UnitState nextState) => 
+        private void SetState(ActorState nextState) => 
             _currentState = nextState;
 
         private void OnUnitTaskReceived(AIContext context) => 
-            SetState(UnitState.Working);
+            SetState(ActorState.Working);
 
-        private void OnUnitTaskCompleted(UnitTask task)
+        private void OnUnitTaskCompleted(GlobalActorTask task)
         {
-            SetState(UnitState.Idle);
+            SetState(ActorState.Idle);
             TaskCompleted?.Invoke(this, task);
         }
 

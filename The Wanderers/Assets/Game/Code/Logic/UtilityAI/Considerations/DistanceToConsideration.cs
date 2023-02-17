@@ -10,7 +10,7 @@ namespace Game.Code.Logic.UtilityAI.Considerations
         public override float GetScore(AIContext context)
         {
             BehaviorData behaviorData = context.GetBehaviorData();
-            float distanceToTarget = Vector3.Distance(context.MoveTarget.position, context.CurrentUnit.transform.position);
+            float distanceToTarget = Vector3.Distance(context.MoveTarget.position, context.CurrentActor.transform.position);
 
             Score = distanceToTarget < behaviorData.MovementProps.StoppingDistance + 1f ? 0.01f : 1f;
             return Score;

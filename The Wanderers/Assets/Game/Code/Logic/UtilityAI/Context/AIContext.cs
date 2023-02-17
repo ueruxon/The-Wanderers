@@ -31,7 +31,7 @@ namespace Game.Code.Logic.UtilityAI.Context
         }
 
         public MovementSystemBase MovementSystem { get; }
-        public Unit CurrentUnit { get; }
+        public Actor CurrentActor { get; }
         public Resource PickupResource { get; private set;}
         public ICommand ActionCommand { get; private set;}
         public bool IsGlobalCommand { get; private set; }
@@ -40,7 +40,7 @@ namespace Game.Code.Logic.UtilityAI.Context
         public bool Homeowner;
 
         public AIContext(DynamicGameContext dynamicGameContext, MovementSystemBase movementSystemBase,
-            AISensor aiSensor, BehaviorData behaviorData, Animator animatorController, Unit unit)
+            AISensor aiSensor, BehaviorData behaviorData, Animator animatorController, Actor actor)
         {
             _dynamicGameContext = dynamicGameContext;
             _aiSensor = aiSensor;
@@ -48,9 +48,9 @@ namespace Game.Code.Logic.UtilityAI.Context
             _animatorController = animatorController;
             
             MovementSystem = movementSystemBase;
-            CurrentUnit = unit;
+            CurrentActor = actor;
             
-            MoveTarget = CurrentUnit.transform;
+            MoveTarget = CurrentActor.transform;
         }
 
         public DynamicGameContext GetGlobalDynamicContext() => 

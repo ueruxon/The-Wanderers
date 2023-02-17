@@ -8,6 +8,14 @@ using MoreMountains.Feedbacks;
 
 namespace Game.Code.Logic.ResourcesLogic
 {
+    public enum ResourceNodeState
+    {
+        Idle,
+        InPrepareForWork,
+        InWork,
+        WorkedOut
+    }
+    
     public class ResourceNode : MonoBehaviour, IInteractable
     {
         public event Action NodeDestroyed;
@@ -17,21 +25,17 @@ namespace Game.Code.Logic.ResourcesLogic
         [SerializeField] private MMF_Player _demolishFeedback;
         [SerializeField] private MMF_Player _growFeedback;
 
-        private ResourceType _currentType;
-        
-        private int _hitToSpawnResource = 3;
-
-        private bool _isActive;
-        private bool _isAvailableForWork;
-
         private Transform _visual;
+        
+        private ResourceType _currentType;
+        private ResourceNodeState _nodeState;
 
+        private int _hitToSpawnResource = 3;
+        
         public void Init(ResourceType resourceType)
         {
             _currentType = resourceType;
-            
-            _isActive = true;
-            _isAvailableForWork = true;
+            _nodeState = ResourceNodeState.Idle;
             
             for (int i = 0; i < _visualVariants.Count; i++) 
                 _visualVariants[i].gameObject.SetActive(false);
@@ -42,14 +46,17 @@ namespace Game.Code.Logic.ResourcesLogic
             _growFeedback.PlayFeedbacks();
         }
 
-        public bool IsActive() => 
-            _isActive;
+        public bool IsActive() =>
+            _nodeState != ResourceNodeState.WorkedOut;
 
         public bool IsAvailableForWork() => 
-            _isAvailableForWork;
+            _nodeState == ResourceNodeState.InPrepareForWork;
+
+        public void Prepare(bool value) => 
+            _nodeState = value ? ResourceNodeState.InPrepareForWork : ResourceNodeState.Idle;
 
         public void InWork() => 
-            _isAvailableForWork = false;
+            _nodeState = ResourceNodeState.InWork;
 
         public ResourceType GetNodeType() => 
             _currentType;
@@ -74,9 +81,10 @@ namespace Game.Code.Logic.ResourcesLogic
         private void Breakdown()
         {
             _visual.DOKill();
-            _isActive = false;
             _collider.enabled = false;
             _demolishFeedback.PlayFeedbacks();
+
+            _nodeState = ResourceNodeState.WorkedOut;
             
             NodeDestroyed?.Invoke();
         }

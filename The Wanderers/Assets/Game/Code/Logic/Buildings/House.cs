@@ -9,21 +9,21 @@ namespace Game.Code.Logic.Buildings
         [SerializeField] private int _houseCapacity = 2;
         [SerializeField] private Transform _interactionPoint;
 
-        private List<Unit> _homeowners;
+        private List<Actor> _homeowners;
         
         public void Init()
         {
-            _homeowners = new List<Unit>(_houseCapacity);
+            _homeowners = new List<Actor>(_houseCapacity);
         }
 
         public bool CanRegisterUnit() => 
             _homeowners.Count < _houseCapacity;
 
-        public void RegisterUnit(Unit unit) => 
-            _homeowners.Add(unit);
+        public void RegisterUnit(Actor actor) => 
+            _homeowners.Add(actor);
 
-        public void RemoveUnit(Unit unit) => 
-            _homeowners.Remove(unit);
+        public void RemoveUnit(Actor actor) => 
+            _homeowners.Remove(actor);
 
         public Transform GetEnterPoint() => 
             _interactionPoint;

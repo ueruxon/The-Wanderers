@@ -3,23 +3,25 @@ using System.Collections;
 using System.Collections.Generic;
 using Game.Code.Common;
 using Game.Code.Core;
+using Game.Code.Infrastructure.Factories;
 using Game.Code.Logic.Buildings;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Units;
 using Game.Code.Logic.UtilityAI.Commander;
 using UnityEngine;
 
-namespace Game.Code.Services.UnitTask
+namespace Game.Code.Infrastructure.Services.UnitTask
 {
-    public class UnitTaskService : IUnitTaskService
+    public class ActorTaskService : IUnitTaskService
     {
         public event Action NotifyUnit;
         
         private readonly DynamicGameContext _dynamicGameContext;
         private readonly ICoroutineRunner _coroutineRunner;
+        private readonly ActorTaskFactory _taskFactory;
 
-        private List<Unit> _allUnits;
-        private Queue<UnitTask> _currentTaskForUnits;
+        private List<Actor> _allUnits;
+        private Queue<GlobalActorTask> _currentTaskForUnits;
 
         // тестовые деревья под сруб
         private List<ResourceNodeSpawner> _chopTrees;
@@ -27,14 +29,15 @@ namespace Game.Code.Services.UnitTask
         private WaitForSeconds _notifyDelay;
         private bool _notifyRoutineIsRunning;
         
-        public UnitTaskService(List<ResourceNodeSpawner> nodeSpawners, DynamicGameContext dynamicGameContext, ICoroutineRunner coroutineRunner)
+        public ActorTaskService(List<ResourceNodeSpawner> nodeSpawners, DynamicGameContext dynamicGameContext, ICoroutineRunner coroutineRunner)
         {
             _dynamicGameContext = dynamicGameContext;
             _coroutineRunner = coroutineRunner;
+            _taskFactory = new ActorTaskFactory();
 
-            _allUnits = new List<Unit>();
+            _allUnits = new List<Actor>();
             _chopTrees = new List<ResourceNodeSpawner>();
-            _currentTaskForUnits = new Queue<UnitTask>();
+            _currentTaskForUnits = new Queue<GlobalActorTask>();
             
             // для теста
             foreach (var resourceNodeSpawner in nodeSpawners) 
@@ -46,17 +49,17 @@ namespace Game.Code.Services.UnitTask
         public bool HasTask() => 
             _currentTaskForUnits.Count > 0;
 
-        public UnitTask GetTask(Unit unit)
+        public GlobalActorTask GetTask(Actor actor)
         {
             //Debug.Log($"Задачу получил {unit.name}");
-            unit.TaskCompleted += OnUnitTaskCompleted;
+            actor.TaskCompleted += OnUnitTaskCompleted;
             
-            UnitTask task = _currentTaskForUnits.Dequeue();
+            GlobalActorTask task = _currentTaskForUnits.Dequeue();
             return task;
         }
 
         // юнит может прервать задачу и тогда он должен ее вернуть в список
-        public void AddTask(UnitTask task) => 
+        public void AddTask(GlobalActorTask task) => 
             _currentTaskForUnits.Enqueue(task);
 
         public void ClearAllTask() =>
@@ -66,18 +69,11 @@ namespace Game.Code.Services.UnitTask
         {
             if (resource.IsAvailable())
             {
-                GrabResourceCommand command = new GrabResourceCommand()
-                {
-                    Resource = resource,
-                    Target = resource.transform,
-                    Goal = storage.GetInteractionPoint(),
-                    Storage = storage
-                };
+                GlobalActorTask task = _taskFactory.CreateGatherResourceTask(resource, storage);
+                AddTask(task);
                 
-                AddTask(new UnitTask(command));
+                NotifyAllAvailableUnits();
             }
-            
-            NotifyAllAvailableUnits();
         }
 
         public void CreateChopTreeTask()
@@ -86,29 +82,24 @@ namespace Game.Code.Services.UnitTask
             {
                 if (nodeSpawner.HasResource())
                 {
-                    ChopTreeCommand chopTreeCommand = new ChopTreeCommand()
-                    {
-                        ResourceNode = nodeSpawner.GetResourceNode(),
-                        Target = nodeSpawner.GetResourceNode().transform,
-                        Goal = nodeSpawner.transform
-                    };
-
-                    AddTask(new UnitTask(command: chopTreeCommand));
+                    ResourceNode node = nodeSpawner.GetResourceNode();
+                    node.Prepare(true);
+                    
+                    GlobalActorTask task = _taskFactory.CreateMiningTask(node);
+                    AddTask(task);
                 }
             }
             
             NotifyAllAvailableUnits();
         }
 
-        private void OnUnitTaskCompleted(Unit unit, UnitTask task)
+        private void OnUnitTaskCompleted(Actor actor, GlobalActorTask task)
         {
-            //Debug.Log($"Задачу сдал {unit.name}, команда: {task.GetCommand()}, STATUS: {task.GetTaskStatus()}");
-            
             // может сломаться??
             if (task.GetTaskStatus() == TaskStatus.Failed)
                 AddTask(task);
             
-            unit.TaskCompleted -= OnUnitTaskCompleted;
+            actor.TaskCompleted -= OnUnitTaskCompleted;
         }
 
         private void NotifyAllAvailableUnits()
@@ -129,23 +120,5 @@ namespace Game.Code.Services.UnitTask
 
             _notifyRoutineIsRunning = false;
         }
-    }
-
-    public class UnitTask
-    {
-        private readonly ICommand _unitCommand;
-
-        private TaskStatus _taskStatus;
-
-        public UnitTask(ICommand command, TaskStatus taskStatus = TaskStatus.Running)
-        {
-            _unitCommand = command;
-            _taskStatus = taskStatus;
-        }
-
-        public ICommand GetCommand() => _unitCommand;
-
-        public TaskStatus GetTaskStatus() => _taskStatus;
-        public void SetTaskStatus(TaskStatus status) => _taskStatus = status;
     }
 }

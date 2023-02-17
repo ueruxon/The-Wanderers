@@ -44,8 +44,8 @@ namespace Game.Code.Logic.UtilityAI.Actions
             if (_interactable.IsActive() == false)
             {
                 _currentHitTimer = _hitCooldown;
-                
-                AIPlanner.CompleteCurrentTask();
+
+                CompleteTask();
                 CurrentActionStatus = ActionStatus.Completed;
             }
         }

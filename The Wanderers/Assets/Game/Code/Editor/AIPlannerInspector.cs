@@ -1,6 +1,6 @@
-﻿using Game.Code.Logic.UtilityAI;
+﻿using Game.Code.Infrastructure.Services.UnitTask;
+using Game.Code.Logic.UtilityAI;
 using Game.Code.Logic.UtilityAI.Commander;
-using Game.Code.Services.UnitTask;
 using UnityEditor;
 using UnityEngine;
 
@@ -20,7 +20,7 @@ namespace Game.Code.Editor
         {
             base.OnInspectorGUI();
 
-            UnitTask task = _aiPlanner.CurrentTask;
+            GlobalActorTask task = _aiPlanner.CurrentTask;
             
             EditorGUILayout.Space(4f);
             EditorGUILayout.Space(4f);

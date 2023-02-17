@@ -1,6 +1,6 @@
 ﻿namespace Game.Code.Logic.UtilityAI.Commander
 {
-    public enum UnitCommandType
+    public enum ActorCommandType
     {
         Idle,
         ChopTree,

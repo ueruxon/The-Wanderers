@@ -12,7 +12,7 @@ namespace Game.Code.Logic.UtilityAI
         [SerializeField] private List<Consideration> _considerationsTemplates;
         [SerializeField] protected ActionStatus CurrentActionStatus;
         
-        protected AIPlanner AIPlanner;
+        private AIPlanner _aIPlanner;
         
         private List<Consideration> _actionConsiderations;
 
@@ -29,8 +29,8 @@ namespace Game.Code.Logic.UtilityAI
 
         public void Init(AIPlanner aiPlanner)
         {
-            AIPlanner = aiPlanner;
-            AIPlanner.TaskReceived += OnTaskReceived;
+            _aIPlanner = aiPlanner;
+            _aIPlanner.TaskReceived += OnTaskReceived;
 
             _actionConsiderations = new List<Consideration>();
 
@@ -46,9 +46,14 @@ namespace Game.Code.Logic.UtilityAI
 
         protected virtual void OnTaskReceived(AIContext context) { }
 
-        public ActionStatus GetActionStatus() => CurrentActionStatus;
+        protected void CompleteTask() => 
+            _aIPlanner.CompleteCurrentTask();
 
-        public List<Consideration> GetConsiderations() => _actionConsiderations;
+        public ActionStatus GetActionStatus() => 
+            CurrentActionStatus;
+
+        public List<Consideration> GetConsiderations() => 
+            _actionConsiderations;
 
         public virtual void OnEnter(AIContext context) =>
             CurrentActionStatus = ActionStatus.Running;

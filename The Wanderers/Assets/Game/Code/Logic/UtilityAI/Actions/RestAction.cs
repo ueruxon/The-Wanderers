@@ -28,8 +28,8 @@ namespace Game.Code.Logic.UtilityAI.Actions
                     _alreadyRest = true;
 
                     context.MovementSystem.Stop();
-                    context.CurrentUnit.Hide();
-                    context.CurrentUnit.transform.position = context.GetHouse().GetEnterPoint().position;
+                    context.CurrentActor.Hide();
+                    context.CurrentActor.transform.position = context.GetHouse().GetEnterPoint().position;
                 }
             }
         }
@@ -38,7 +38,7 @@ namespace Game.Code.Logic.UtilityAI.Actions
         {
             base.OnExit(context);
             
-            context.CurrentUnit.Show();
+            context.CurrentActor.Show();
             context.GetAnimatorController().SetBool("IsWalking", false);
         }
     }

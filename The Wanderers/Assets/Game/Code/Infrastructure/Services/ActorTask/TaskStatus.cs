@@ -1,4 +1,4 @@
-﻿namespace Game.Code.Services.UnitTask
+﻿namespace Game.Code.Infrastructure.Services.UnitTask
 {
     public enum TaskStatus
     {

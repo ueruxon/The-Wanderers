@@ -30,9 +30,9 @@ namespace Game.Code.Logic.UtilityAI.Actions
 
                 //context.GetGlobalContext().RemoveResource(context.PickupResource);
                 context.SetPickupResource(null);
-                context.CurrentUnit.DetachResource();
+                context.CurrentActor.DetachResource();
 
-                AIPlanner.CompleteCurrentTask();
+                CompleteTask();
                 CurrentActionStatus = ActionStatus.Completed;
             }
         }

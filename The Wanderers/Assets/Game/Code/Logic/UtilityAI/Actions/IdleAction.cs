@@ -34,36 +34,10 @@ namespace Game.Code.Logic.UtilityAI.Actions
                 }
             }
         }
-
-
-        public override void OnEnter(AIContext context)
-        {
-            base.OnEnter(context);
-            
-            //context.MovementSystem.Stop();
-            //context.GetAnimatorController().SetBool("IsWalking", false);
-        }
-
+        
         public override void Execute(AIContext context)
         {
-            // попытаться взять уже добытый ресурс на карте приоритетнее, чем искать ресурную ноду
-            // if (context.GetGlobalContext().TryTakeAvailableResource(context.CurrentUnit, out Resource availableResource))
-            // {
-            //     context.MoveTarget = availableResource.transform;
-            //     CurrentActionStatus = ActionStatus.Completed;
-            //
-            //     // переписать
-            //     context.SetPickupResource(availableResource);
-            // }
             
-            //
-            // if (context.TryGetClosestResourceSpawner(out ResourceNodeSpawner nodeSpawner))
-            // {
-            //     nodeSpawner.InWork();
-            //     context.MoveTarget = nodeSpawner.transform;
-            //
-            //     CurrentActionStatus = ActionStatus.Completed;
-            // }
         }
     }
 }

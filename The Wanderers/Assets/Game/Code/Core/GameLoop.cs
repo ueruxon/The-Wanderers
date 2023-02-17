@@ -1,12 +1,12 @@
 using System.Collections.Generic;
 using Game.Code.Common;
+using Game.Code.Infrastructure.Services.UnitTask;
 using Game.Code.Logic.Buildings;
 using Game.Code.Logic.Camera;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Selection;
 using Game.Code.Logic.Units;
 using Game.Code.Logic.UtilityAI.Commander;
-using Game.Code.Services.UnitTask;
 using UnityEngine;
 
 namespace Game.Code.Core
@@ -16,7 +16,7 @@ namespace Game.Code.Core
         [SerializeField] private CameraController _cameraController;
         [SerializeField] private SelectionHandler _selectionHandler;
 
-        [SerializeField] private Unit _unitPrefab;
+        [SerializeField] private Actor _actorPrefab;
         [SerializeField] private int _unitsCount = 3;
         [Space(8)]
 
@@ -32,11 +32,11 @@ namespace Game.Code.Core
         [SerializeField] private List<ResourceNodeSpawner> _resourceSpawners;
 
         private DynamicGameContext _dynamicGameContext;
-        private UnitTaskService _taskService;
+        private ActorTaskService _taskService;
         
         // для теста
-        [SerializeField] private UnitCommandType _command;
-        private UnitCommandType _currentCommand;
+        [SerializeField] private ActorCommandType _command;
+        private ActorCommandType _currentCommand;
         
         private void Awake()
         {
@@ -45,7 +45,7 @@ namespace Game.Code.Core
             
             // глобальный контекст должен быть доступен из любого места? Сервис?
             _dynamicGameContext = new DynamicGameContext();
-            _taskService = new UnitTaskService(_resourceSpawners, _dynamicGameContext, this);
+            _taskService = new ActorTaskService(_resourceSpawners, _dynamicGameContext, this);
 
             foreach (ResourceNodeSpawner nodeSpawner in _resourceSpawners)
             {
@@ -66,12 +66,12 @@ namespace Game.Code.Core
                     transform.position.y, 
                     transform.position.z + i);
                 
-                Unit unit = Instantiate(_unitPrefab, spawnPoint, Quaternion.identity);
-                unit.Init(_dynamicGameContext, _taskService);
-                unit.name = $"Unit {i + 1}";
+                Actor actor = Instantiate(_actorPrefab, spawnPoint, Quaternion.identity);
+                actor.Init(_dynamicGameContext, _taskService);
+                actor.name = $"Actor: {i + 1}";
                 
                 // должна делать фабрика
-                _dynamicGameContext.AddHomelessUnit(unit);
+                _dynamicGameContext.AddHomelessUnit(actor);
             }
 
             
@@ -161,7 +161,7 @@ namespace Game.Code.Core
 
                 for (int i = 0; i < homelessUnitCount; i++)
                 {
-                    Unit homeless = _dynamicGameContext.GetHomelessUnit();
+                    Actor homeless = _dynamicGameContext.GetHomelessUnit();
 
                     if (house.CanRegisterUnit())
                     {
@@ -193,11 +193,11 @@ namespace Game.Code.Core
             return false;
         }
 
-        private void SetUnitCommand(UnitCommandType command)
+        private void SetUnitCommand(ActorCommandType command)
         {
             _currentCommand = command;
 
-            if (_currentCommand == UnitCommandType.ChopTree)
+            if (_currentCommand == ActorCommandType.ChopTree)
             {
                 _taskService.CreateChopTreeTask();
             }

@@ -22,7 +22,7 @@ namespace Game.Code.Logic.UtilityAI.Actions
                 Resource resource = grabCommand.Resource;
                 
                 resource.Pickup();
-                context.CurrentUnit.AttachResource(resource);
+                context.CurrentActor.AttachResource(resource);
                 context.SetPickupResource(resource);
                 //context.MoveTarget = grabCommand.TargetTo;
 
