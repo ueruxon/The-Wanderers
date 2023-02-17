@@ -3607,7 +3607,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _cameraController: {fileID: 1229937158}
   _selectionHandler: {fileID: 1060919970}
-  _unitPrefab: {fileID: 6961387923947132343, guid: 4238c43c67a2f3140b26f598334b8582,
+  _actorPrefab: {fileID: 6961387923947132343, guid: 4238c43c67a2f3140b26f598334b8582,
     type: 3}
   _unitsCount: 10
   _housePrefab: {fileID: 5502533130734335481, guid: 52d4dee9d4cb0ef4a9a29c15d7cb8e89,

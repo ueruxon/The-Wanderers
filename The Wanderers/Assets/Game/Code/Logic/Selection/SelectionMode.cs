@@ -1,11 +1,11 @@
-﻿namespace Game.Code.Logic.Selection
+﻿using Game.Code.Logic.ResourcesLogic;
+
+namespace Game.Code.Logic.Selection
 {
     public enum SelectionMode
     {
         None,
-        Tree,
-        Stone,
-        DeselectTree,
-        DeselectStone
+        Select,
+        Deselect,
     }
 }

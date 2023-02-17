@@ -34,10 +34,6 @@ namespace Game.Code.Core
         private DynamicGameContext _dynamicGameContext;
         private ActorTaskService _taskService;
         
-        // для теста
-        [SerializeField] private ActorCommandType _command;
-        private ActorCommandType _currentCommand;
-        
         private void Awake()
         {
             _cameraController.Init();
@@ -45,7 +41,7 @@ namespace Game.Code.Core
             
             // глобальный контекст должен быть доступен из любого места? Сервис?
             _dynamicGameContext = new DynamicGameContext();
-            _taskService = new ActorTaskService(_resourceSpawners, _dynamicGameContext, this);
+            _taskService = new ActorTaskService(_selectionHandler, _dynamicGameContext, this);
 
             foreach (ResourceNodeSpawner nodeSpawner in _resourceSpawners)
             {
@@ -85,12 +81,6 @@ namespace Game.Code.Core
         
         private void Update()
         {
-            // для теста
-            if (_command != _currentCommand)
-            {
-                SetUnitCommand(_command);
-            }
-
             // для теста
             if (Input.GetKeyDown(KeyCode.K))
             {
@@ -191,16 +181,6 @@ namespace Game.Code.Core
             }
 
             return false;
-        }
-
-        private void SetUnitCommand(ActorCommandType command)
-        {
-            _currentCommand = command;
-
-            if (_currentCommand == ActorCommandType.ChopTree)
-            {
-                _taskService.CreateChopTreeTask();
-            }
         }
     }
 }

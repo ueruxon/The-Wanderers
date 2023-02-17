@@ -38,4 +38,4 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   TestValue: 0
-  _timeBeforeRest: 10
+  _timeBeforeRest: 5

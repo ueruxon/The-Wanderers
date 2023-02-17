@@ -13,8 +13,6 @@ namespace Game.Code.Logic.UtilityAI.Actions
         {
             base.OnEnter(context);
             
-            print("pickup");
-            
             ICommand command = context.ActionCommand;
             
             if (command is GrabResourceCommand grabCommand)
