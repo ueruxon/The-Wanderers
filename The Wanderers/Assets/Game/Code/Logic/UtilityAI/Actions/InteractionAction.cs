@@ -36,8 +36,9 @@ namespace Game.Code.Logic.UtilityAI.Actions
             {
                 // убрать аниматор
                 context.GetAnimatorController().SetTrigger("Hit");
-                _interactable.Interact();
+
                 _currentHitTimer = _hitCooldown;
+                _interactable.Interact();
             }
 
 

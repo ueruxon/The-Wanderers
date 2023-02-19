@@ -1,3 +1,4 @@
+using System.Collections;
 using System.Collections.Generic;
 using Game.Code.Common;
 using Game.Code.Infrastructure.Services.UnitTask;
@@ -33,7 +34,7 @@ namespace Game.Code.Core
 
         private DynamicGameContext _dynamicGameContext;
         private ActorTaskService _taskService;
-        
+
         private void Awake()
         {
             _cameraController.Init();
@@ -65,9 +66,10 @@ namespace Game.Code.Core
                 Actor actor = Instantiate(_actorPrefab, spawnPoint, Quaternion.identity);
                 actor.Init(_dynamicGameContext, _taskService);
                 actor.name = $"Actor: {i + 1}";
-                
+
                 // должна делать фабрика
-                _dynamicGameContext.AddHomelessUnit(actor);
+                _dynamicGameContext.AddVillager(actor);
+                _dynamicGameContext.AddHomelessActor(actor);
             }
 
             
@@ -77,7 +79,9 @@ namespace Game.Code.Core
                 house.Init();
                 OnHouseBuilt(house);
             }
+            
         }
+        
         
         private void Update()
         {
@@ -151,7 +155,7 @@ namespace Game.Code.Core
 
                 for (int i = 0; i < homelessUnitCount; i++)
                 {
-                    Actor homeless = _dynamicGameContext.GetHomelessUnit();
+                    Actor homeless = _dynamicGameContext.GetHomelessActor();
 
                     if (house.CanRegisterUnit())
                     {
@@ -160,11 +164,13 @@ namespace Game.Code.Core
                         continue;
                     }
                     
-                    _dynamicGameContext.AddHomelessUnit(homeless);
+                    _dynamicGameContext.AddHomelessActor(homeless);
                 }
             }
         }
         
+        // можем ли поместить ресурс в хранилище
+        // и если можем, то создаем задачу
         private bool TryAddResourceInStorage(Resource resource)
         {
             List<Storage> storages = _dynamicGameContext.GetStoragesByType(resource.GetResourceType());
@@ -173,9 +179,9 @@ namespace Game.Code.Core
             {
                 if (storage.IsFull() == false && storage.HasPlaceForReserve())
                 {
-                    
                     storage.ReservePlaceForResource();
                     _taskService.CreateGatherResourceTask(resource, storage);
+                    
                     return true;
                 }
             }

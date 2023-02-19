@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Game.Code.Extensions;
+using UnityEngine;
 using UnityEngine.UI;
 
 namespace Game.Code.Logic.ResourcesLogic
@@ -6,6 +7,7 @@ namespace Game.Code.Logic.ResourcesLogic
     public class WorkIndicator : MonoBehaviour
     {
         [SerializeField] private Image _icon;
+        [SerializeField] private CanvasGroup _canvas;
 
         public void Init()
         {
@@ -15,9 +17,9 @@ namespace Game.Code.Logic.ResourcesLogic
         }
 
         public void Show() => 
-            gameObject.SetActive(true);
-        
+            _canvas.SetActive(true);
+
         public void Hide() => 
-            gameObject.SetActive(false);
+            _canvas.SetActive(false);
     }
 }

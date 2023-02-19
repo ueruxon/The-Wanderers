@@ -38,7 +38,7 @@ NavMeshProjectSettings:
   - name: 
     cost: 1
   - name: NotRoad
-    cost: 5
+    cost: 10
   - name: 
     cost: 3
   - name: 

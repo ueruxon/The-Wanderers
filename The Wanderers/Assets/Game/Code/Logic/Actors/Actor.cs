@@ -26,7 +26,7 @@ namespace Game.Code.Logic.Units
         [SerializeField] private AttachedResource _attachedResource;
         
         private DynamicGameContext _dynamicGameContext;
-        private IUnitTaskService _taskService;
+        private IActorTaskService _taskService;
 
         private AIPlanner _aiPlanner;
         private AIContext _aiContext;
@@ -37,7 +37,7 @@ namespace Game.Code.Logic.Units
 
         private ActorState _currentState;
         
-        public void Init(DynamicGameContext dynamicGameContext, IUnitTaskService taskService)
+        public void Init(DynamicGameContext dynamicGameContext, IActorTaskService taskService)
         {
             _dynamicGameContext = dynamicGameContext;
             _taskService = taskService;
@@ -60,13 +60,8 @@ namespace Game.Code.Logic.Units
             SetState(ActorState.Idle);
         }
 
-        public bool IsAvailable()
-        {
-            if (_currentState != ActorState.Working)
-                return true;
-
-            return false;
-        }
+        public bool IsAvailable() => 
+            _currentState != ActorState.Working;
 
         public void AttachResource(Resource resource) => 
             _attachedResource.Attach(resource);
@@ -76,7 +71,6 @@ namespace Game.Code.Logic.Units
 
         public void RegisterHome(House house) => 
             _aiContext.RegisterHome(house);
-
         
         public void Hide()
         {

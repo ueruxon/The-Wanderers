@@ -20,13 +20,13 @@ namespace Game.Code.Logic.Selection
         // для теста
         [SerializeField] private SelectionMode _currentMode = SelectionMode.Select;
 
+        private List<ResourceNode> _selectedResourceNodes;
+        
         private Vector3 _startDragPosition;
         private Vector3 _selectionCenterPosition;
 
         private bool _selection;
-
-        private List<ResourceNode> _selectedResourceNodes;
-
+        
         public void Init()
         {
             _camera = UnityEngine.Camera.main;
@@ -39,8 +39,7 @@ namespace Game.Code.Logic.Selection
             _playerInput.Enable();
             _playerInput.Selection.Select.performed += OnMousePressed;
             _playerInput.Selection.Select.canceled += OnMouseRaised;
-
-
+            
             // делать инстаншиейт и загружать префаб через статик дату
             _selectedArea.gameObject.SetActive(false);
         }
@@ -70,14 +69,18 @@ namespace Game.Code.Logic.Selection
 
         private void OnMouseRaised(InputAction.CallbackContext inputValue)
         {
-            SelectObjects();
-
+            if (_currentMode != SelectionMode.None)
+            {
+                SelectObjects();
+                
+                if (_selectedResourceNodes.Count > 0) 
+                    ResourceNodeSelected?.Invoke(_currentMode);
+            }
+            
             _selection = false;
 
             _selectedArea.localScale = Vector3.zero;
             _selectedArea.gameObject.SetActive(false);
-
-            ResourceNodeSelected?.Invoke(_currentMode);
         }
 
         private void SelectObjects()
@@ -97,8 +100,7 @@ namespace Game.Code.Logic.Selection
                 centerArea.z = .45f;
                 isSingleTarget = true;
             }
-
-
+            
             if (isSingleTarget)
             {
                 Vector2 screenPosition = _playerInput.Selection.PointerPosition.ReadValue<Vector2>();
@@ -106,27 +108,20 @@ namespace Game.Code.Logic.Selection
 
                 if (Physics.Raycast(ray, out RaycastHit raycastHit, 999f, _selectionObjectsMask))
                 {
-                    if (raycastHit.collider.TryGetComponent(out ResourceNode node))
-                    {
-                        if (node.IsIdle())
-                            _selectedResourceNodes.Add(node);
-                    }
+                    if (raycastHit.collider.TryGetComponent(out ResourceNode node)) 
+                        _selectedResourceNodes.Add(node);
                 }
                 
                 return;
             }
             
-
             Collider[] hitColliders = Physics.OverlapBox(_selectionCenterPosition, 
                 centerArea, Quaternion.identity, _selectionObjectsMask);
 
             foreach (Collider collider in hitColliders)
             {
-                if (collider.TryGetComponent(out ResourceNode node))
-                {
-                    if (node.IsIdle())
-                        _selectedResourceNodes.Add(node);
-                }
+                if (collider.TryGetComponent(out ResourceNode node)) 
+                    _selectedResourceNodes.Add(node);
             }
         }
         

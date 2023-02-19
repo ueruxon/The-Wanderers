@@ -8,95 +8,95 @@ using Game.Code.Logic.Buildings;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Selection;
 using Game.Code.Logic.Units;
-using Game.Code.Logic.UtilityAI.Commander;
 using UnityEngine;
 
 namespace Game.Code.Infrastructure.Services.UnitTask
 {
-    public class ActorTaskService : IUnitTaskService
+    public class ActorTaskService : IActorTaskService
     {
-        public event Action NotifyUnit;
+        public event Action NotifyActor;
 
         private readonly SelectionHandler _selectionHandler;
         private readonly DynamicGameContext _dynamicGameContext;
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly ActorTaskFactory _taskFactory;
-
-        private List<Actor> _allUnits;
-        private Queue<GlobalActorTask> _globalTaskQueue;
+        
+        private TaskPool _taskPool;
         
         private WaitForSeconds _notifyDelay;
         private bool _notifyRoutineIsRunning;
         
         public ActorTaskService(SelectionHandler selectionHandler, DynamicGameContext dynamicGameContext, ICoroutineRunner coroutineRunner)
         {
+            _taskFactory = new ActorTaskFactory();
+            _taskPool = new TaskPool();
+            _notifyDelay = new WaitForSeconds(0.5f);
+
             _selectionHandler = selectionHandler;
             _selectionHandler.ResourceNodeSelected += OnMiningCommand;
-            
+
             _dynamicGameContext = dynamicGameContext;
             _coroutineRunner = coroutineRunner;
-            _taskFactory = new ActorTaskFactory();
-
-            _allUnits = new List<Actor>();
-            _globalTaskQueue = new Queue<GlobalActorTask>();
-            
-
-            _notifyDelay = new WaitForSeconds(0.7f);
-        }
-
-        private void OnMiningCommand(SelectionMode mode)
-        {
-            if (mode == SelectionMode.Select)
-            {
-                List<ResourceNode> selectedNodes = _selectionHandler.GetSelectedNodes();
-                
-                foreach (ResourceNode resourceNode in selectedNodes)
-                {
-                    resourceNode.Prepare(true);
-                    
-                    GlobalActorTask task = _taskFactory.CreateMiningTask(resourceNode);
-                    AddTask(task);
-                }
-            }
-            
-            NotifyAllAvailableUnits();
         }
 
         public bool HasTask() => 
-            _globalTaskQueue.Count > 0;
+            _taskPool.HasTask();
 
         public GlobalActorTask GetTask(Actor actor)
         {
-            //Debug.Log($"Задачу получил {unit.name}");
             actor.TaskCompleted += OnUnitTaskCompleted;
             
-            GlobalActorTask task = _globalTaskQueue.Dequeue();
-            return task;
+            GlobalActorTask actorTask = _taskPool.GetAvailableTask();
+            return actorTask;
         }
 
         // юнит может прервать задачу и тогда он должен ее вернуть в список
         public void AddTask(GlobalActorTask task) => 
-            _globalTaskQueue.Enqueue(task);
-
-        public void ClearAllTask() =>
-            _globalTaskQueue.Clear();
+            _taskPool.AddTask(task);
         
         public void CreateGatherResourceTask(Resource resource, Storage storage)
         {
             if (resource.IsAvailable())
             {
                 GlobalActorTask task = _taskFactory.CreateGatherResourceTask(resource, storage);
-                AddTask(task);
+                _taskPool.AddTask(task);
                 
                 NotifyAllAvailableUnits();
             }
+        }
+
+        private void OnMiningCommand(SelectionMode mode)
+        {
+            List<ResourceNode> selectedNodes = _selectionHandler.GetSelectedNodes();
+                
+            foreach (ResourceNode resourceNode in selectedNodes)
+            {
+                if (mode == SelectionMode.Select)
+                {
+                    if (_taskPool.Contains(resourceNode.ID) == false)
+                    {
+                        resourceNode.PrepareForWork(true);
+                        
+                        GlobalActorTask task = _taskFactory.CreateMiningTask(resourceNode);
+                        _taskPool.AddTask(task);
+                    }
+                }
+
+                if (mode == SelectionMode.Deselect)
+                {
+                    resourceNode.PrepareForWork(false);
+                    _taskPool.CancelTask(resourceNode.ID);
+                }
+            }
+
+            NotifyAllAvailableUnits();
         }
 
         private void OnUnitTaskCompleted(Actor actor, GlobalActorTask task)
         {
             // может сломаться??
             if (task.GetTaskStatus() == TaskStatus.Failed)
-                AddTask(task);
+                _taskPool.AddTask(task);
             
             actor.TaskCompleted -= OnUnitTaskCompleted;
         }
@@ -111,9 +111,9 @@ namespace Game.Code.Infrastructure.Services.UnitTask
         {
             _notifyRoutineIsRunning = true;
             
-            while (_globalTaskQueue.Count > 0)
+            while (_taskPool.HasTask())
             {
-                NotifyUnit?.Invoke();
+                NotifyActor?.Invoke();
                 yield return _notifyDelay;
             }
 
@@ -123,6 +123,76 @@ namespace Game.Code.Infrastructure.Services.UnitTask
         public void Cleanup()
         {
             _selectionHandler.ResourceNodeSelected -= OnMiningCommand;
+        }
+    }
+
+    public class TaskPool
+    {
+        private Queue<GlobalActorTask> _availableTasksQueue;
+        private List<GlobalActorTask> _tasksInWork;
+        
+        public TaskPool()
+        {
+            _availableTasksQueue = new Queue<GlobalActorTask>();
+            _tasksInWork = new List<GlobalActorTask>();
+        }
+
+        public void AddTask(GlobalActorTask task) => 
+            _availableTasksQueue.Enqueue(task);
+
+        public GlobalActorTask GetAvailableTask()
+        {
+            GlobalActorTask task = _availableTasksQueue.Dequeue();
+            _tasksInWork.Add(task);
+            
+            return task;
+        }
+        
+        public bool HasTask() => 
+            _availableTasksQueue.Count > 0;
+
+        // пересчет коллекции. Не производительно?
+        public void CancelTask(string taskID)
+        {
+            int taskQueueCount = _availableTasksQueue.Count;
+
+            for (int i = 0; i < taskQueueCount; i++)
+            {
+                GlobalActorTask task = _availableTasksQueue.Dequeue();
+                
+                if (task.GetID() != taskID) 
+                    AddTask(task);
+            }
+            
+            _tasksInWork.RemoveAll(task =>
+            {
+                if (task.GetID() == taskID)
+                {
+                    task.SetTaskStatus(TaskStatus.Canceled);
+                    return true;
+                }
+
+                return false;
+            });
+        }
+
+
+        // пересчет коллекции. Не производительно?
+        public bool Contains(string taskID)
+        {
+            int taskCount = _availableTasksQueue.Count;
+            
+            for (int i = 0; i < taskCount; i++)
+            {
+                GlobalActorTask task = _availableTasksQueue.Dequeue();
+                
+                if (task.GetID() == taskID)
+                    return true;
+
+                AddTask(task);
+            }
+            
+            return false;
         }
     }
 }

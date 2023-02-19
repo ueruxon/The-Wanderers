@@ -26,39 +26,31 @@ namespace Game.Code.Logic.ResourcesLogic
         [SerializeField] private MMF_Player _demolishFeedback;
         [SerializeField] private MMF_Player _growFeedback;
 
+        public string ID { get; private set; }
+
         private Transform _visual;
         
-        private ResourceType _currentType;
         private ResourceNodeState _nodeState;
 
         private int _hitToSpawnResource = 3;
         
-        public void Init(ResourceType resourceType)
+        public void Init()
         {
-            _currentType = resourceType;
-            _nodeState = ResourceNodeState.Idle;
-            
-            for (int i = 0; i < _visualVariants.Count; i++) 
-                _visualVariants[i].gameObject.SetActive(false);
-
-            _visual = _visualVariants.GetRandomItem();
-            _visual.gameObject.SetActive(true);
-            
+            VisualInit();
             _workIndicator.Init();
-            
+
+            ID = UniqueIDGenerator.GenerateID(gameObject);
+            _nodeState = ResourceNodeState.Idle;
             _growFeedback.PlayFeedbacks();
         }
-
-        public bool IsIdle() => 
-            _nodeState == ResourceNodeState.Idle;
-
+        
         public bool IsActive() =>
             _nodeState != ResourceNodeState.WorkedOut;
 
         public bool IsAvailableForWork() => 
             _nodeState == ResourceNodeState.InPrepareForWork;
 
-        public void Prepare(bool value)
+        public void PrepareForWork(bool value)
         {
             if (value)
             {
@@ -74,10 +66,7 @@ namespace Game.Code.Logic.ResourcesLogic
 
         public void InWork() => 
             _nodeState = ResourceNodeState.InWork;
-
-        public ResourceType GetNodeType() => 
-            _currentType;
-
+        
         public void Interact()
         {
             _hitToSpawnResource--;
@@ -87,7 +76,16 @@ namespace Game.Code.Logic.ResourcesLogic
             if (_hitToSpawnResource == 0) 
                 Breakdown();
         }
-        
+
+        private void VisualInit()
+        {
+            for (int i = 0; i < _visualVariants.Count; i++)
+                _visualVariants[i].gameObject.SetActive(false);
+
+            _visual = _visualVariants.GetRandomItem();
+            _visual.gameObject.SetActive(true);
+        }
+
         private void Shake()
         {
             _visual.DOShakePosition(0.5f, 0.25f);

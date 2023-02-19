@@ -11,7 +11,8 @@ namespace Game.Code.Core
         private readonly Dictionary<ResourceType, List<Storage>> _storagesByType;
         private readonly Dictionary<ResourceType, Queue<Resource>> _minedResourcesByType;
 
-        private readonly Queue<Actor> _homelessUnits;
+        private readonly Queue<Actor> _homelessActors;
+        private readonly List<Actor> _villagerActors;
 
         public DynamicGameContext()
         {
@@ -31,7 +32,8 @@ namespace Game.Code.Core
                 [ResourceType.Coal] = new()
             };
             
-            _homelessUnits = new Queue<Actor>();
+            _homelessActors = new Queue<Actor>();
+            _villagerActors = new List<Actor>();
         }
         
         public void AddMinedResourceInQueue(Resource resource) => 
@@ -52,13 +54,19 @@ namespace Game.Code.Core
         public List<Storage> GetStoragesByType(ResourceType type) => 
             _storagesByType[type];
 
-        public void AddHomelessUnit(Actor actor) =>
-            _homelessUnits.Enqueue(actor);
+        public void AddHomelessActor(Actor actor) =>
+            _homelessActors.Enqueue(actor);
         
         public int GetHomelessCount() => 
-            _homelessUnits.Count;
+            _homelessActors.Count;
         
-        public Actor GetHomelessUnit() => 
-            _homelessUnits.Dequeue();
+        public Actor GetHomelessActor() => 
+            _homelessActors.Dequeue();
+
+        public void AddVillager(Actor actor) => 
+            _villagerActors.Add(actor);
+
+        public List<Actor> GetVillagers() => 
+            _villagerActors;
     }
 }

@@ -15,68 +15,68 @@ namespace Game.Code.Logic.UtilityAI
         public event Action<GlobalActorTask> TaskCompleted;
 
         private DynamicGameContext _gameContext;
-        private IUnitTaskService _taskService;
+        private IActorTaskService _taskService;
         private AIContext _aiContext;
         private Actor _currentActor;
-        
+
         private GlobalActorTask _currentTask;
         public GlobalActorTask CurrentTask => _currentTask;
 
         private IdleCommand _baseIdleCommand;
         private GlobalActorTask _baseIdleTask;
-        
-        public void Init(Actor actor, DynamicGameContext dynamicGameContext, AIContext aiContext, IUnitTaskService taskService)
+
+        public void Init(Actor actor, DynamicGameContext dynamicGameContext, AIContext aiContext,
+            IActorTaskService taskService)
         {
             _currentActor = actor;
             _gameContext = dynamicGameContext;
             _aiContext = aiContext;
             _taskService = taskService;
-            _taskService.NotifyUnit += OnNotifyUnitAboutTask;
+            _taskService.NotifyActor += OnNotifyUnitAboutTask;
 
-            _baseIdleCommand = new IdleCommand{ Target = _currentActor.transform };
+            _baseIdleCommand = new IdleCommand {Target = _currentActor.transform};
             _baseIdleTask = new GlobalActorTask(_baseIdleCommand);
             _currentTask = _baseIdleTask;
-            
+
             _aiContext.SetActionCommand(_baseIdleCommand);
+        }
+
+        public void CompleteGlobalTask()
+        {
+            _currentTask.SetTaskStatus(TaskStatus.Completed);
+            _currentTask.Canceled -= CompleteGlobalTask;
+
+            TaskCompleted?.Invoke(_currentTask);
+
+            // пробуем взять новую задачу
+            if (_taskService.HasTask())
+            {
+                ExecuteTask();
+                return;
+            }
+            
+            _currentTask = _baseIdleTask;
+            _aiContext.SetActionCommand(_baseIdleCommand);
+            _aiContext.MoveTarget = _baseIdleCommand.Target;
         }
 
         private void OnNotifyUnitAboutTask()
         {
-            if (_currentActor.IsAvailable()) 
-                TryExecuteTask();
+            if (_currentActor.IsAvailable() && _taskService.HasTask())
+                ExecuteTask();
         }
 
-        private bool TryExecuteTask()
+        private void ExecuteTask()
         {
-            if (_taskService.HasTask())
-            {
-                _currentTask = _taskService.GetTask(_currentActor);
-                _aiContext.SetActionCommand(_currentTask.GetCommand());
+            _currentTask = _taskService.GetTask(_currentActor);
+            _currentTask.Canceled += CompleteGlobalTask;
             
-                TaskReceived?.Invoke(_aiContext);
-                return true;
-            }
+            _aiContext.SetActionCommand(_currentTask.GetCommand());
 
-            return false;
+            TaskReceived?.Invoke(_aiContext);
         }
 
-        public void CompleteCurrentTask()
-        {
-            _currentTask.SetTaskStatus(TaskStatus.Completed);
-            TaskCompleted?.Invoke(_currentTask);
-
-            // пробуем взять новую задачу
-            if (TryExecuteTask() == false)
-            {
-                _currentTask = _baseIdleTask;
-                _aiContext.SetActionCommand(_baseIdleCommand);
-                _aiContext.MoveTarget = _baseIdleCommand.Target;
-            }
-        }
-
-        public void Cleanup() => 
-            _taskService.NotifyUnit -= OnNotifyUnitAboutTask;
+        public void Cleanup() =>
+            _taskService.NotifyActor -= OnNotifyUnitAboutTask;
     }
-
-    
 }

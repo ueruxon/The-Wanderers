@@ -29,7 +29,7 @@ namespace Game.Code.Infrastructure.Factories
                 Goal = resourceNode.transform
             };
 
-            return new GlobalActorTask(command: chopTreeCommand);
+            return new GlobalActorTask(command: chopTreeCommand, resourceNode.ID);
         }
     }
 }

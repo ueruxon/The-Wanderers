@@ -4,6 +4,7 @@
     {
         Running,
         Failed,
-        Completed
+        Completed,
+        Canceled
     }
 }

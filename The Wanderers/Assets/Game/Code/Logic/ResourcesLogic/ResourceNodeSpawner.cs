@@ -46,7 +46,7 @@ namespace Game.Code.Logic.ResourcesLogic
         {
             _currentNode = Instantiate(_resourceNodePrefab, transform);
             _currentNode.NodeDestroyed += OnNodeDestroyed;
-            _currentNode.Init(_resourceType);
+            _currentNode.Init();
 
             _isWorkedOut = false;
             _currentTimerToRespawn = 0f;
