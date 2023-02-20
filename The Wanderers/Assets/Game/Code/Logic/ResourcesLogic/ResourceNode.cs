@@ -20,6 +20,9 @@ namespace Game.Code.Logic.ResourcesLogic
     {
         public event Action NodeDestroyed;
 
+        // вынести в статик дату
+        [SerializeField] private int _hitToSpawnResource = 3;
+
         [SerializeField] private Collider _collider;
         [SerializeField] private List<Transform> _visualVariants;
         [SerializeField] private WorkIndicator _workIndicator;
@@ -32,8 +35,6 @@ namespace Game.Code.Logic.ResourcesLogic
         
         private ResourceNodeState _nodeState;
 
-        private int _hitToSpawnResource = 3;
-        
         public void Init()
         {
             VisualInit();
