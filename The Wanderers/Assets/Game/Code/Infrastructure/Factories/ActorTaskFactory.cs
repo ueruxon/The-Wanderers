@@ -22,14 +22,14 @@ namespace Game.Code.Infrastructure.Factories
 
         public GlobalActorTask CreateMiningTask(ResourceNode resourceNode)
         {
-            ChopTreeCommand chopTreeCommand = new ChopTreeCommand()
+            MiningCommand miningCommand = new MiningCommand()
             {
                 ResourceNode = resourceNode,
                 Target = resourceNode.transform,
                 Goal = resourceNode.transform
             };
 
-            return new GlobalActorTask(command: chopTreeCommand, resourceNode.ID);
+            return new GlobalActorTask(command: miningCommand, resourceNode.ID);
         }
     }
 }

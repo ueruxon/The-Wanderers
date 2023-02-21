@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
-using Game.Code.Core;
+using Game.Code.Infrastructure.Core;
 using Game.Code.Logic.Buildings;
+using Game.Code.Logic.Game;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Units;
 using Game.Code.Logic.UtilityAI.Commander;

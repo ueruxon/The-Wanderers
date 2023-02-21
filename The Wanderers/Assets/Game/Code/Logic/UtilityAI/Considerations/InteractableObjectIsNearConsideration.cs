@@ -12,7 +12,7 @@ namespace Game.Code.Logic.UtilityAI.Considerations
         {
             if (context.IsGlobalCommand)
             {
-                if (context.ActionCommand is ChopTreeCommand)
+                if (context.ActionCommand is MiningCommand)
                 {
                     Score = context.Sensor.IsResourceNode() ? 1 : 0;
                     return Score;

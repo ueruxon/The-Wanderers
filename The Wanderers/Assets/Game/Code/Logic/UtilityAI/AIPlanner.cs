@@ -1,6 +1,7 @@
 ﻿using System;
-using Game.Code.Core;
+using Game.Code.Infrastructure.Core;
 using Game.Code.Infrastructure.Services.UnitTask;
+using Game.Code.Logic.Game;
 using Game.Code.Logic.Units;
 using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;

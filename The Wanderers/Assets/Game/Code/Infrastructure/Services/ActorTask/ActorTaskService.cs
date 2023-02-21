@@ -2,9 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using Game.Code.Common;
-using Game.Code.Core;
+using Game.Code.Infrastructure.Core;
 using Game.Code.Infrastructure.Factories;
 using Game.Code.Logic.Buildings;
+using Game.Code.Logic.Game;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Selection;
 using Game.Code.Logic.Units;
@@ -17,7 +18,6 @@ namespace Game.Code.Infrastructure.Services.UnitTask
         public event Action NotifyActor;
 
         private readonly SelectionHandler _selectionHandler;
-        private readonly DynamicGameContext _dynamicGameContext;
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly ActorTaskFactory _taskFactory;
         
@@ -26,7 +26,7 @@ namespace Game.Code.Infrastructure.Services.UnitTask
         private WaitForSeconds _notifyDelay;
         private bool _notifyRoutineIsRunning;
         
-        public ActorTaskService(SelectionHandler selectionHandler, DynamicGameContext dynamicGameContext, ICoroutineRunner coroutineRunner)
+        public ActorTaskService(SelectionHandler selectionHandler, ICoroutineRunner coroutineRunner)
         {
             _taskFactory = new ActorTaskFactory();
             _taskPool = new TaskPool();
@@ -34,8 +34,7 @@ namespace Game.Code.Infrastructure.Services.UnitTask
 
             _selectionHandler = selectionHandler;
             _selectionHandler.ResourceNodeSelected += OnMiningCommand;
-
-            _dynamicGameContext = dynamicGameContext;
+            
             _coroutineRunner = coroutineRunner;
         }
 

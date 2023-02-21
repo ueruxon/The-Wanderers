@@ -3,7 +3,7 @@ using Game.Code.Logic.Buildings;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Units;
 
-namespace Game.Code.Core
+namespace Game.Code.Logic.Game
 {
     // глобальный контекст игры, который содержит данные о сессии
     public class DynamicGameContext

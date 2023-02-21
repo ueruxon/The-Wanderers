@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using Game.Code.Common;
 using UnityEngine;
 using DG.Tweening;
+using Game.Code.Data.StaticData.ResourceNodeData;
 using Game.Code.Extensions;
 using MoreMountains.Feedbacks;
 
@@ -20,8 +21,6 @@ namespace Game.Code.Logic.ResourcesLogic
     {
         public event Action NodeDestroyed;
 
-        // вынести в статик дату
-        [SerializeField] private int _hitToSpawnResource = 3;
 
         [SerializeField] private Collider _collider;
         [SerializeField] private List<Transform> _visualVariants;
@@ -32,16 +31,19 @@ namespace Game.Code.Logic.ResourcesLogic
         public string ID { get; private set; }
 
         private Transform _visual;
-        
         private ResourceNodeState _nodeState;
+        
+        private int _hitToSpawnResource;
 
-        public void Init()
+        public void Init(ResourceNodeData nodeData)
         {
-            VisualInit();
-            _workIndicator.Init();
-
-            ID = UniqueIDGenerator.GenerateID(gameObject);
+            _hitToSpawnResource = nodeData.HitToDestroy;
             _nodeState = ResourceNodeState.Idle;
+            ID = UniqueIDGenerator.GenerateID(gameObject);
+
+            VisualInit();
+            
+            _workIndicator.Init();
             _growFeedback.PlayFeedbacks();
         }
         

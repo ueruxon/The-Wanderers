@@ -1,16 +1,15 @@
-using System.Collections;
 using System.Collections.Generic;
 using Game.Code.Common;
 using Game.Code.Infrastructure.Services.UnitTask;
 using Game.Code.Logic.Buildings;
 using Game.Code.Logic.Camera;
+using Game.Code.Logic.Game;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Selection;
 using Game.Code.Logic.Units;
-using Game.Code.Logic.UtilityAI.Commander;
 using UnityEngine;
 
-namespace Game.Code.Core
+namespace Game.Code.Infrastructure.Core
 {
     public class GameLoop : MonoBehaviour, ICoroutineRunner
     {
@@ -20,8 +19,7 @@ namespace Game.Code.Core
         [SerializeField] private Actor _actorPrefab;
         [SerializeField] private int _unitsCount = 3;
         [Space(8)]
-
-
+        
         [SerializeField] private House _housePrefab;
         [SerializeField] private List<House> _testHouses;
         [Space(8)]
@@ -42,7 +40,7 @@ namespace Game.Code.Core
             
             // глобальный контекст должен быть доступен из любого места? Сервис?
             _dynamicGameContext = new DynamicGameContext();
-            _taskService = new ActorTaskService(_selectionHandler, _dynamicGameContext, this);
+            _taskService = new ActorTaskService(_selectionHandler, this);
 
             foreach (ResourceNodeSpawner nodeSpawner in _resourceSpawners)
             {
@@ -81,8 +79,7 @@ namespace Game.Code.Core
             }
             
         }
-        
-        
+
         private void Update()
         {
             // для теста

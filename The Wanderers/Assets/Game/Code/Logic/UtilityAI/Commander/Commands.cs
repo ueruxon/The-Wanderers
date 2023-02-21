@@ -10,7 +10,7 @@ namespace Game.Code.Logic.UtilityAI.Commander
         public Transform Goal { get; set; }
     }
     
-    public struct ChopTreeCommand : ICommand
+    public struct MiningCommand : ICommand
     {
         public ResourceNode ResourceNode;
         public Transform Target { get; set; }

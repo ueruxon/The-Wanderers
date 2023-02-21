@@ -11,7 +11,7 @@ namespace Game.Code.Logic.UtilityAI.Actions
         {
             ICommand command = context.ActionCommand;
 
-            if (command is ChopTreeCommand treeCommand)
+            if (command is MiningCommand treeCommand)
             {
                 ResourceNode resourceNode = treeCommand.ResourceNode;
                 

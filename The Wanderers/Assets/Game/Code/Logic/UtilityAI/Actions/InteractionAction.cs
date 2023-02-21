@@ -24,7 +24,7 @@ namespace Game.Code.Logic.UtilityAI.Actions
             // для теста
             //context.GetAnimatorController().SetBool("IsWalking", false);
 
-            if (command is ChopTreeCommand chopTreeCommand) 
+            if (command is MiningCommand chopTreeCommand) 
                 _interactable = chopTreeCommand.ResourceNode;
         }
 

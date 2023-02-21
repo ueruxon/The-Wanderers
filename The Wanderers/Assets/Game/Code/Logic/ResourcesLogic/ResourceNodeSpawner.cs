@@ -1,5 +1,5 @@
 ﻿using System;
-using Game.Code.Core;
+using Game.Code.Data.StaticData.ResourceNodeData;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -10,27 +10,35 @@ namespace Game.Code.Logic.ResourcesLogic
         public event Action<Resource> ResourceSpawned;
 
         [SerializeField] private ResourceType _resourceType;
-        [SerializeField] private ResourceNode _resourceNodePrefab;
-        [SerializeField] private Resource _resourcePrefab;
         
+        private ResourceNodeData _nodeData;
+        private ResourceData _resourceData;
         private ResourceNode _currentNode;
-        
+
         private bool _isWorkedOut;
         private float _currentTimerToRespawn;
-        private float _timeToRespawn = 20f;
+        private float _timeToRespawn;
 
         public void Init()
         {
             SpawnNode();
         }
-        
+
+        public void Init(ResourceNodeData nodeData, ResourceData resourceData)
+        {
+            _nodeData = nodeData;
+            _resourceData = resourceData;
+            _timeToRespawn = _nodeData.TimeToRespawn;
+            
+            SpawnNode();
+        }
+
         public bool HasResource() => 
             _isWorkedOut == false;
 
-        // может быть null
-        public ResourceNode GetResourceNode() => 
-            _currentNode;
-        
+        public ResourceType GetResourceType() => 
+            _resourceType;
+
         private void Update()
         {
             if (_isWorkedOut)
@@ -44,12 +52,13 @@ namespace Game.Code.Logic.ResourcesLogic
 
         private void SpawnNode()
         {
-            _currentNode = Instantiate(_resourceNodePrefab, transform);
+            _currentNode = Instantiate(_nodeData.Prefab, transform);
             _currentNode.NodeDestroyed += OnNodeDestroyed;
-            _currentNode.Init();
+            _currentNode.Init(_nodeData);
 
             _isWorkedOut = false;
             _currentTimerToRespawn = 0f;
+            _timeToRespawn = _nodeData.TimeToRespawn;
         }
 
         private void OnNodeDestroyed()
@@ -65,15 +74,15 @@ namespace Game.Code.Logic.ResourcesLogic
         private void SpawnResource()
         {
             Vector3 randomPosition = GetRandomPositionOnRadius(transform.position);
-            Resource resource = Instantiate(_resourcePrefab, randomPosition, Quaternion.identity);
+            Resource resource = Instantiate(_resourceData.Prefab, randomPosition, Quaternion.identity);
             resource.name = $"{resource.GetResourceType().ToString()}, Position: {transform.position.x}";
             
             ResourceSpawned?.Invoke(resource);
         }
-        
+
         private Vector3 GetRandomPositionOnRadius(Vector3 startPosition)
         {
-            float randomRadius = Random.Range(1, 3);
+            float randomRadius = Random.Range(2, 4);
 
             float randomAngle = Random.Range(0f, 360f);
             float x = randomRadius * Mathf.Cos(randomAngle);
@@ -81,7 +90,7 @@ namespace Game.Code.Logic.ResourcesLogic
             
             return new Vector3(startPosition.x + x, .2f, startPosition.z + z);
         }
-        
+
         private void OnDrawGizmos()
         {
             if (_resourceType == ResourceType.Wood)
