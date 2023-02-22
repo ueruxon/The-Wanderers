@@ -27,58 +27,50 @@ namespace Game.Code.Infrastructure.Core
         [SerializeField] private Storage _storagePrefab;
         [SerializeField] private List<Storage> _storages;
         [Space(8)]
-
-        [SerializeField] private List<ResourceNodeSpawner> _resourceSpawners;
-
+        
         private DynamicGameContext _dynamicGameContext;
         private ActorTaskService _taskService;
 
-        private void Awake()
-        {
-            _cameraController.Init();
-            _selectionHandler.Init();
-            
-            // глобальный контекст должен быть доступен из любого места? Сервис?
-            _dynamicGameContext = new DynamicGameContext();
-            _taskService = new ActorTaskService(_selectionHandler, this);
-
-            foreach (ResourceNodeSpawner nodeSpawner in _resourceSpawners)
-            {
-                nodeSpawner.Init();
-                nodeSpawner.ResourceSpawned += OnResourceSpawned;
-            }
-
-            foreach (Storage storage in _storages)
-            {
-                storage.Init();
-                _dynamicGameContext.AddStorageInList(storage);
-            }
-
-            for (int i = 0; i < _unitsCount; i++)
-            {
-                Vector3 spawnPoint = new Vector3(
-                    transform.position.x + i, 
-                    transform.position.y, 
-                    transform.position.z + i);
-                
-                Actor actor = Instantiate(_actorPrefab, spawnPoint, Quaternion.identity);
-                actor.Init(_dynamicGameContext, _taskService);
-                actor.name = $"Actor: {i + 1}";
-
-                // должна делать фабрика
-                _dynamicGameContext.AddVillager(actor);
-                _dynamicGameContext.AddHomelessActor(actor);
-            }
-
-            
-            // для теста домов
-            foreach (House house in _testHouses)
-            {
-                house.Init();
-                OnHouseBuilt(house);
-            }
-            
-        }
+        // private void Awake()
+        // {
+        //     _cameraController.Init();
+        //     _selectionHandler.Init();
+        //     
+        //     // глобальный контекст должен быть доступен из любого места? Сервис?
+        //     _dynamicGameContext = new DynamicGameContext();
+        //     _taskService = new ActorTaskService(_selectionHandler, this);
+        //     
+        //     foreach (Storage storage in _storages)
+        //     {
+        //         storage.Init();
+        //         _dynamicGameContext.AddStorageInList(storage);
+        //     }
+        //
+        //     for (int i = 0; i < _unitsCount; i++)
+        //     {
+        //         Vector3 spawnPoint = new Vector3(
+        //             transform.position.x + i, 
+        //             transform.position.y, 
+        //             transform.position.z + i);
+        //         
+        //         Actor actor = Instantiate(_actorPrefab, spawnPoint, Quaternion.identity);
+        //         actor.Init(_dynamicGameContext, _taskService);
+        //         actor.name = $"Actor: {i + 1}";
+        //
+        //         // должна делать фабрика
+        //         _dynamicGameContext.AddVillager(actor);
+        //         _dynamicGameContext.AddHomelessActor(actor);
+        //     }
+        //
+        //     
+        //     // для теста домов
+        //     foreach (House house in _testHouses)
+        //     {
+        //         house.Init();
+        //         OnHouseBuilt(house);
+        //     }
+        //     
+        // }
 
         private void Update()
         {
@@ -113,12 +105,6 @@ namespace Game.Code.Infrastructure.Core
             }
         }
         
-        private void OnResourceSpawned(Resource resource)
-        {
-            if (TryAddResourceInStorage(resource) == false)
-                _dynamicGameContext.AddMinedResourceInQueue(resource);
-        }
-
         // для теста (вынести в другой класс)
         private void OnStorageBuilt(Storage storage)
         {

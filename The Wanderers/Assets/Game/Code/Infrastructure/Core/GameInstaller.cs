@@ -15,8 +15,7 @@ namespace Game.Code.Infrastructure.Core
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly SelectionHandler _selectionHandler;
         private readonly CameraController _cameraController;
-
-
+        
         private GameInitializer _gameInitializer;
         private GameLoop _gameLoop;
 
@@ -36,10 +35,15 @@ namespace Game.Code.Infrastructure.Core
             StaticDataService staticDataService = new StaticDataService(assetProvider);
             ActorTaskService actorTaskService = new ActorTaskService(_selectionHandler, _coroutineRunner);
             GameFactory gameFactory = new GameFactory(staticDataService);
-            
             DynamicGameContext dynamicGameContext = new DynamicGameContext();
+            ResourceMiningController miningController = new ResourceMiningController(dynamicGameContext, gameFactory, actorTaskService);
 
-            _gameInitializer = new GameInitializer(_selectionHandler, _cameraController, staticDataService, gameFactory);
+            _gameInitializer = new GameInitializer(
+                _selectionHandler, 
+                _cameraController,
+                staticDataService, 
+                gameFactory, 
+                miningController);
         }
     }
 }

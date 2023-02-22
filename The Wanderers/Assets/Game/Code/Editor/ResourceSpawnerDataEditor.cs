@@ -1,4 +1,6 @@
-﻿using Game.Code.Data.StaticData.ResourceNodeData;
+﻿using System.Collections.Generic;
+using System.Linq;
+using Game.Code.Data.StaticData.ResourceNodeData;
 using Game.Code.Logic.ResourcesLogic;
 using UnityEditor;
 using UnityEngine;
@@ -16,15 +18,11 @@ namespace Game.Code.Editor
 
             if (GUILayout.Button("Collect"))
             {
-                var spawners = FindObjectsOfType<ResourceNodeSpawner>();
-
-                foreach (ResourceNodeSpawner nodeSpawner in spawners)
-                {
-                    SpawnerData data = new SpawnerData(
-                        nodeSpawner, nodeSpawner.GetResourceType(), nodeSpawner.transform.position);
-                    
-                    levelData.ResourceSpawners.Add(data);
-                }
+                levelData.ResourceSpawners =
+                    FindObjectsOfType<SpawnerMarker>()
+                        .Select(x =>
+                            new SpawnerData(x.ResourceType, x.transform.position, x.transform))
+                        .ToList();
             }
 
             EditorUtility.SetDirty(target);

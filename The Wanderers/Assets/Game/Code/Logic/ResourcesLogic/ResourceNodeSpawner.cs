@@ -1,5 +1,6 @@
 ﻿using System;
 using Game.Code.Data.StaticData.ResourceNodeData;
+using Game.Code.Infrastructure.Factories;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -9,36 +10,26 @@ namespace Game.Code.Logic.ResourcesLogic
     {
         public event Action<Resource> ResourceSpawned;
 
-        [SerializeField] private ResourceType _resourceType;
+        private ResourceType _resourceType;
         
+        private IResourceMiningFactory _gameFactory;
         private ResourceNodeData _nodeData;
-        private ResourceData _resourceData;
         private ResourceNode _currentNode;
 
         private bool _isWorkedOut;
         private float _currentTimerToRespawn;
         private float _timeToRespawn;
-
-        public void Init()
+        
+        public void Init(ResourceType resourceType, ResourceNodeData nodeData, IResourceMiningFactory gameFactory)
         {
-            SpawnNode();
-        }
-
-        public void Init(ResourceNodeData nodeData, ResourceData resourceData)
-        {
+            _resourceType = resourceType;
             _nodeData = nodeData;
-            _resourceData = resourceData;
+            _gameFactory = gameFactory;
             _timeToRespawn = _nodeData.TimeToRespawn;
             
             SpawnNode();
         }
-
-        public bool HasResource() => 
-            _isWorkedOut == false;
-
-        public ResourceType GetResourceType() => 
-            _resourceType;
-
+        
         private void Update()
         {
             if (_isWorkedOut)
@@ -52,9 +43,8 @@ namespace Game.Code.Logic.ResourcesLogic
 
         private void SpawnNode()
         {
-            _currentNode = Instantiate(_nodeData.Prefab, transform);
+            _currentNode = _gameFactory.CreateResourceNode(_resourceType, at: transform);
             _currentNode.NodeDestroyed += OnNodeDestroyed;
-            _currentNode.Init(_nodeData);
 
             _isWorkedOut = false;
             _currentTimerToRespawn = 0f;
@@ -74,8 +64,7 @@ namespace Game.Code.Logic.ResourcesLogic
         private void SpawnResource()
         {
             Vector3 randomPosition = GetRandomPositionOnRadius(transform.position);
-            Resource resource = Instantiate(_resourceData.Prefab, randomPosition, Quaternion.identity);
-            resource.name = $"{resource.GetResourceType().ToString()}, Position: {transform.position.x}";
+            Resource resource =_gameFactory.CreateResource(_resourceType, randomPosition);
             
             ResourceSpawned?.Invoke(resource);
         }

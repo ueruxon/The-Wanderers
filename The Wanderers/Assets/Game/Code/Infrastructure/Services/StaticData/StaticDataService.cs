@@ -3,14 +3,15 @@ using System.Linq;
 using Game.Code.Data.StaticData.ResourceNodeData;
 using Game.Code.Infrastructure.Services.AssetManagement;
 using Game.Code.Logic.ResourcesLogic;
+using UnityEngine;
 
 namespace Game.Code.Infrastructure.Services.StaticData
 {
     public class StaticDataService : IStaticDataService
     {
         private readonly AssetProvider _assetProvider;
-
-        private List<ResourceNodeSpawner> _nodeSpawners;
+        
+        private ResourceSpawnersData _resourceSpawnersData;
         private Dictionary<ResourceType, ResourceNodeData> _resourceNodeDataByType;
         private Dictionary<ResourceType, ResourceData> _resourceDataByType;
 
@@ -24,20 +25,17 @@ namespace Game.Code.Infrastructure.Services.StaticData
 
         private void LoadData()
         {
-            _nodeSpawners = _assetProvider.Load<ResourceSpawnersData>(AssetPath.ResourceSpawnerPath)
-                .ResourceSpawners
-                .Select(x => x.Spawner)
-                .ToList();
-            
+            _resourceSpawnersData = _assetProvider.Load<ResourceSpawnersData>(AssetPath.ResourceSpawnerDataPath);
+                
             _resourceNodeDataByType = _assetProvider.LoadAll<ResourceNodeData>(AssetPath.ResourceNodeDataPath)
                 .ToDictionary(x => x.Type, x => x);
             
             _resourceDataByType = _assetProvider.LoadAll<ResourceData>(AssetPath.ResourceDataPath)
                 .ToDictionary(x => x.Type, x => x);
         }
-
-        public List<ResourceNodeSpawner> GetNodeSpawners() => 
-            _nodeSpawners;
+        
+        public ResourceSpawnersData GetResourceSpawnersData() => 
+            _resourceSpawnersData;
 
         public ResourceNodeData GetDataForNode(ResourceType type)
         {

@@ -8,6 +8,7 @@ namespace Game.Code.Data.StaticData.ResourceNodeData
     [CreateAssetMenu(fileName = "ResourceSpawners", menuName = "Resources/ResourceSpawners", order = 0)]
     public class ResourceSpawnersData : ScriptableObject
     {
+        public ResourceNodeSpawner Prefab;
         public List<SpawnerData> ResourceSpawners;
     }
     
@@ -16,13 +17,13 @@ namespace Game.Code.Data.StaticData.ResourceNodeData
     {
         public ResourceType Type;
         public Vector3 Position;
-        public ResourceNodeSpawner Spawner;
+        public Transform Container;
 
-        public SpawnerData(ResourceNodeSpawner spawner, ResourceType type, Vector3 spawnerPosition)
+        public SpawnerData(ResourceType type, Vector3 spawnerPosition, Transform container)
         {
-            Spawner = spawner;
             Type = type;
             Position = spawnerPosition;
+            Container = container;
         }
     }
 }
