@@ -11,6 +11,7 @@ namespace Game.Code.Logic.UtilityAI
 
         private List<UtilityAction> _actions;
         private AIContext _aiContext;
+        private IContextProvider _contextProvider;
         private AIPlanner _aiPlanner;
         
         private UtilityAction _currentAction;
@@ -18,11 +19,12 @@ namespace Game.Code.Logic.UtilityAI
 
         private UtilityAction _prevAction;
 
-        public void Init(AIContext aiContext, AIPlanner aiPlanner)
+        public void Init(AIContext aiContext, AIPlanner aiPlanner, IContextProvider contextProvider)
         {
             _actions = _actionsContainer.GetComponentsInChildren<UtilityAction>().ToList();
             _aiContext = aiContext;
             _aiPlanner = aiPlanner;
+            _contextProvider = contextProvider;
 
             foreach (UtilityAction utilityAction in _actions) 
                 utilityAction.Init(_aiPlanner);
@@ -40,7 +42,7 @@ namespace Game.Code.Logic.UtilityAI
                 switch (actionStatus)
                 {
                     case ActionStatus.Running:
-                        _currentAction.Execute(_aiContext);
+                        _currentAction.Execute(_aiContext, _contextProvider);
                         break;
                     case ActionStatus.Failed:
                         _currentAction.OnFailed(_aiContext);
@@ -69,7 +71,7 @@ namespace Game.Code.Logic.UtilityAI
 
             for (int i = 0; i < _actions.Count; i++)
             {
-                float scoreAction = _actions[i].ScoreAction(_aiContext);
+                float scoreAction = _actions[i].ScoreAction(_aiContext, _contextProvider);
                 
                 if (scoreAction > bestScore)
                 {
@@ -88,9 +90,9 @@ namespace Game.Code.Logic.UtilityAI
             
             if (!Equals(_currentAction, utilityAction))
             {
-                _currentAction.OnExit(_aiContext);
+                _currentAction.OnExit(_aiContext, _contextProvider);
                 _currentAction = utilityAction;
-                _currentAction.OnEnter(_aiContext);
+                _currentAction.OnEnter(_aiContext, _contextProvider);
             }
         }
     }

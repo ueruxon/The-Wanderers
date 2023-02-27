@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.AI;
 
-namespace Game.Code.Logic.Units
+namespace Game.Code.Logic.Actors
 {
     public abstract class MovementSystemBase : MonoBehaviour
     {

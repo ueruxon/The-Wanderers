@@ -35,7 +35,7 @@ namespace Game.Code.Logic.UtilityAI.Actions
             }
         }
         
-        public override void Execute(AIContext context)
+        public override void Execute(AIContext context, IContextProvider contextProvider)
         {
             
         }

@@ -1,16 +1,13 @@
-﻿using System.Collections.Generic;
-using Game.Code.Infrastructure.Core;
+﻿using Game.Code.Logic.Actors;
 using Game.Code.Logic.Buildings;
 using Game.Code.Logic.Game;
 using Game.Code.Logic.ResourcesLogic;
-using Game.Code.Logic.Units;
 using Game.Code.Logic.UtilityAI.Commander;
 using UnityEngine;
 
 namespace Game.Code.Logic.UtilityAI.Context
 {
-    // контекст с данными конкретно для этого юнита
-    public class AIContext
+    public abstract class AIContext
     {
         private readonly DynamicGameContext _dynamicGameContext;
         private readonly AISensor _aiSensor;
@@ -36,10 +33,7 @@ namespace Game.Code.Logic.UtilityAI.Context
         public Resource PickupResource { get; private set;}
         public ICommand ActionCommand { get; private set;}
         public bool IsGlobalCommand { get; private set; }
-
-        private House _houseProperty;
-        public bool Homeowner;
-
+        
         public AIContext(DynamicGameContext dynamicGameContext, MovementSystemBase movementSystemBase,
             AISensor aiSensor, BehaviorData behaviorData, Animator animatorController, Actor actor)
         {
@@ -51,35 +45,23 @@ namespace Game.Code.Logic.UtilityAI.Context
             MovementSystem = movementSystemBase;
             CurrentActor = actor;
             
-            MoveTarget = CurrentActor.transform;
+            //MoveTarget = CurrentActor.transform;
         }
 
         public DynamicGameContext GetGlobalDynamicContext() => 
             _dynamicGameContext;
-
-        // нужна какая-то дата конкретно для этого монобеха
+        
         public BehaviorData GetBehaviorData() => 
             _behaviorData;
 
         public Animator GetAnimatorController() => 
             _animatorController;
-
-        public void SetPickupResource(Resource availableResource) => 
-            PickupResource = availableResource;
-
+        
+        
         public void SetActionCommand(ICommand command)
         {
             ActionCommand = command;
             IsGlobalCommand = command is not IdleCommand;
         }
-
-        public void RegisterHome(House house)
-        {
-            Homeowner = true;
-            _houseProperty = house;
-        }
-
-        public House GetHouse() => 
-            _houseProperty;
     }
 }

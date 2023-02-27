@@ -1,4 +1,5 @@
-﻿using Game.Code.Logic.ResourcesLogic;
+﻿using Game.Code.Logic.Actors.Villagers;
+using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
@@ -9,9 +10,9 @@ namespace Game.Code.Logic.UtilityAI.Actions
     {
         private Transform _target;
         
-        public override void OnEnter(AIContext context)
+        public override void OnEnter(AIContext context, IContextProvider contextProvider)
         {
-            base.OnEnter(context);
+            base.OnEnter(context, contextProvider);
             
             ICommand command = context.ActionCommand;
             
@@ -20,15 +21,17 @@ namespace Game.Code.Logic.UtilityAI.Actions
                 Resource resource = grabCommand.Resource;
                 
                 resource.Pickup();
-                context.CurrentActor.AttachResource(resource);
-                context.SetPickupResource(resource);
+                
+                contextProvider.GetContext<VillagerContext>().CurrentActor.AttachResource(resource);
+                contextProvider.GetContext<VillagerContext>().SetPickupResource(resource);
+                
                 //context.MoveTarget = grabCommand.TargetTo;
 
                 _target = grabCommand.Goal;
             }
         }
 
-        public override void Execute(AIContext context)
+        public override void Execute(AIContext context, IContextProvider contextProvider)
         {
             // может какая-то анимация поднятия, или еще че
             // после того как подняли

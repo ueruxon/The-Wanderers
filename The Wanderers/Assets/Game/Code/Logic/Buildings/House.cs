@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Game.Code.Logic.Units;
+using Game.Code.Logic.Actors;
 using UnityEngine;
 
 namespace Game.Code.Logic.Buildings

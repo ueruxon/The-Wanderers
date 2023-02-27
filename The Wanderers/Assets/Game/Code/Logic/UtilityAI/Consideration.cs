@@ -23,6 +23,6 @@ namespace Game.Code.Logic.UtilityAI
             Score = TestValue;
         }
 
-        public abstract float GetScore(AIContext context);
+        public abstract float GetScore(AIContext context, IContextProvider contextProvider);
     }
 }

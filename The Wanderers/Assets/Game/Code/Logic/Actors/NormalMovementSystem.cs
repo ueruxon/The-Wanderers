@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
-using UnityEngine.AI;
 
-namespace Game.Code.Logic.Units
+namespace Game.Code.Logic.Actors
 {
     class NormalMovementSystem : MovementSystemBase
     {

@@ -17,7 +17,7 @@ namespace Game.Code.Logic.UtilityAI.Considerations
             _inactivityTimer = 0f;
         }
 
-        public override float GetScore(AIContext context)
+        public override float GetScore(AIContext context, IContextProvider contextProvider)
         {
             if (context.IsGlobalCommand == false) 
                 _inactivityTimer += Time.deltaTime;

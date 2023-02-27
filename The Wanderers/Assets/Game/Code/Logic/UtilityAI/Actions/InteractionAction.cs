@@ -13,9 +13,9 @@ namespace Game.Code.Logic.UtilityAI.Actions
         
         private IInteractable _interactable;
         
-        public override void OnEnter(AIContext context)
+        public override void OnEnter(AIContext context, IContextProvider contextProvider)
         {
-            base.OnEnter(context);
+            base.OnEnter(context, contextProvider);
             
             _currentHitTimer = _hitCooldown;
             
@@ -28,7 +28,7 @@ namespace Game.Code.Logic.UtilityAI.Actions
                 _interactable = chopTreeCommand.ResourceNode;
         }
 
-        public override void Execute(AIContext context)
+        public override void Execute(AIContext context, IContextProvider contextProvider)
         {
             _currentHitTimer -= Time.deltaTime;
 

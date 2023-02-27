@@ -1,8 +1,8 @@
 ﻿using System;
 using Game.Code.Infrastructure.Core;
 using Game.Code.Infrastructure.Services.UnitTask;
+using Game.Code.Logic.Actors;
 using Game.Code.Logic.Game;
-using Game.Code.Logic.Units;
 using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
@@ -14,8 +14,7 @@ namespace Game.Code.Logic.UtilityAI
     {
         public event Action<AIContext> TaskReceived;
         public event Action<GlobalActorTask> TaskCompleted;
-
-        private DynamicGameContext _gameContext;
+        
         private IActorTaskService _taskService;
         private AIContext _aiContext;
         private Actor _currentActor;
@@ -26,11 +25,10 @@ namespace Game.Code.Logic.UtilityAI
         private IdleCommand _baseIdleCommand;
         private GlobalActorTask _baseIdleTask;
 
-        public void Init(Actor actor, DynamicGameContext dynamicGameContext, AIContext aiContext,
+        public void Init(Actor actor, AIContext aiContext,
             IActorTaskService taskService)
         {
             _currentActor = actor;
-            _gameContext = dynamicGameContext;
             _aiContext = aiContext;
             _taskService = taskService;
             _taskService.NotifyActor += OnNotifyUnitAboutTask;

@@ -1,4 +1,5 @@
-﻿using Game.Code.Logic.Buildings;
+﻿using Game.Code.Logic.Actors.Villagers;
+using Game.Code.Logic.Buildings;
 using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;
 
@@ -8,9 +9,9 @@ namespace Game.Code.Logic.UtilityAI.Actions
     {
         private Storage _storage;
         
-        public override void OnEnter(AIContext context)
+        public override void OnEnter(AIContext context, IContextProvider contextProvider)
         {
-            base.OnEnter(context);
+            base.OnEnter(context, contextProvider);
             
             ICommand command = context.ActionCommand;
             
@@ -18,19 +19,17 @@ namespace Game.Code.Logic.UtilityAI.Actions
                 _storage = grabCommand.Storage;
         }
         
-        public override void Execute(AIContext context)
+        public override void Execute(AIContext context, IContextProvider contextProvider)
         {
             // анимация бросания вещи?
             // еще чето?
 
             if (context.MovementSystem.ReachedDestination())
             {
-                // переписать естессна
                 _storage.AddResource(context.PickupResource);
-
-                //context.GetGlobalContext().RemoveResource(context.PickupResource);
-                context.SetPickupResource(null);
-                context.CurrentActor.DetachResource();
+                
+                contextProvider.GetContext<VillagerContext>().SetPickupResource(null);
+                contextProvider.GetContext<VillagerContext>().CurrentActor.DetachResource();
 
                 CompleteTask();
                 CurrentActionStatus = ActionStatus.Completed;

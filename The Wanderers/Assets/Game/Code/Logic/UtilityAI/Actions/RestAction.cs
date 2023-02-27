@@ -1,4 +1,5 @@
-﻿using Game.Code.Logic.Buildings;
+﻿using Game.Code.Logic.Actors.Villagers;
+using Game.Code.Logic.Buildings;
 using Game.Code.Logic.UtilityAI.Context;
 
 namespace Game.Code.Logic.UtilityAI.Actions
@@ -7,19 +8,19 @@ namespace Game.Code.Logic.UtilityAI.Actions
     {
         private bool _alreadyRest;
 
-        public override void OnEnter(AIContext context)
+        public override void OnEnter(AIContext context, IContextProvider contextProvider)
         {
-            base.OnEnter(context);
+            base.OnEnter(context, contextProvider);
 
             _alreadyRest = false;
 
-            House house = context.GetHouse();
+            House house = contextProvider.GetContext<VillagerContext>().GetHouse();
 
             context.MovementSystem.SetDestination(house.GetEnterPoint().position);
             context.GetAnimatorController().SetBool("IsWalking", true);
         }
 
-        public override void Execute(AIContext context)
+        public override void Execute(AIContext context, IContextProvider contextProvider)
         {
             if (context.MovementSystem.ReachedDestination())
             {
@@ -28,17 +29,21 @@ namespace Game.Code.Logic.UtilityAI.Actions
                     _alreadyRest = true;
 
                     context.MovementSystem.Stop();
-                    context.CurrentActor.Hide();
-                    context.CurrentActor.transform.position = context.GetHouse().GetEnterPoint().position;
+                    contextProvider.GetContext<VillagerContext>().CurrentActor.Hide();
+                    context.CurrentActor.transform.position = contextProvider
+                        .GetContext<VillagerContext>()
+                        .GetHouse()
+                        .GetEnterPoint()
+                        .position;
                 }
             }
         }
 
-        public override void OnExit(AIContext context)
+        public override void OnExit(AIContext context, IContextProvider contextProvider)
         {
-            base.OnExit(context);
+            base.OnExit(context, contextProvider);
             
-            context.CurrentActor.Show();
+            contextProvider.GetContext<VillagerContext>().CurrentActor.Show();
             context.GetAnimatorController().SetBool("IsWalking", false);
         }
     }

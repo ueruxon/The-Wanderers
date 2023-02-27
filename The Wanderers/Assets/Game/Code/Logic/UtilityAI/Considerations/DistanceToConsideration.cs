@@ -1,4 +1,4 @@
-﻿using Game.Code.Logic.Units;
+﻿using Game.Code.Logic.Actors;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
 
@@ -7,7 +7,7 @@ namespace Game.Code.Logic.UtilityAI.Considerations
     [CreateAssetMenu(fileName = "DistanceTo", menuName = "UtilityAI/Considerations/DistanceTo")]
     public class DistanceToConsideration : Consideration
     {
-        public override float GetScore(AIContext context)
+        public override float GetScore(AIContext context, IContextProvider contextProvider)
         {
             BehaviorData behaviorData = context.GetBehaviorData();
             float distanceToTarget = Vector3.Distance(context.MoveTarget.position, context.CurrentActor.transform.position);

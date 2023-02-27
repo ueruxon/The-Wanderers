@@ -1,14 +1,12 @@
 ﻿using System;
-using Game.Code.Infrastructure.Core;
 using Game.Code.Infrastructure.Services.UnitTask;
-using Game.Code.Logic.Buildings;
 using Game.Code.Logic.Game;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.UtilityAI;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
 
-namespace Game.Code.Logic.Units
+namespace Game.Code.Logic.Actors
 {
     public enum ActorState
     {
@@ -17,79 +15,55 @@ namespace Game.Code.Logic.Units
     }
     
     [RequireComponent(typeof(AIBrain), typeof(AIPlanner))]
-    public class Actor : MonoBehaviour
+    public abstract class Actor : MonoBehaviour
     {
         public event Action<Actor, GlobalActorTask> TaskCompleted;
 
-        [SerializeField] private AISensor _aiSensor;
-        [SerializeField] private MovementSystemBase _movementSystem;
-        [SerializeField] private BehaviorData _behaviorData;
-        [SerializeField] private AttachedResource _attachedResource;
-        
-        private DynamicGameContext _dynamicGameContext;
-        private IActorTaskService _taskService;
+        [SerializeField] protected AISensor _aiSensor;
+        [SerializeField] protected MovementSystemBase _movementSystem;
+        [SerializeField] protected BehaviorData _behaviorData;
 
-        private AIPlanner _aiPlanner;
-        private AIContext _aiContext;
-        private AIBrain _aiBrain;
+        protected IActorTaskService TaskService;
+        protected AIPlanner AiPlanner;
+        protected AIBrain AiBrain;
 
-        private Animator _animatorController;
+        protected Animator AnimatorController;
         private Resource _resourceInHand;
 
         private ActorState _currentState;
-        
-        public void Init(DynamicGameContext dynamicGameContext, IActorTaskService taskService)
+
+        public void Construct(DynamicGameContext dynamicGameContext, IActorTaskService taskService)
         {
-            _dynamicGameContext = dynamicGameContext;
-            _taskService = taskService;
-            _animatorController = GetComponent<Animator>();
-            _movementSystem.Init(_behaviorData.MovementProps);
-
-            _aiSensor.Init();
-            _aiContext = new AIContext(_dynamicGameContext, _movementSystem, _aiSensor, _behaviorData, _animatorController, this);
-
-            _aiPlanner = GetComponent<AIPlanner>();
-            _aiPlanner.Init(this, dynamicGameContext, _aiContext, _taskService);
-            _aiPlanner.TaskCompleted += OnUnitTaskCompleted;
-            _aiPlanner.TaskReceived += OnUnitTaskReceived;
-
-            _aiBrain = GetComponent<AIBrain>();
-            _aiBrain.Init(_aiContext, _aiPlanner);
+            TaskService = taskService;
             
-            _attachedResource.Init(transform);
+            AnimatorController = GetComponent<Animator>();
+            AiPlanner = GetComponent<AIPlanner>();
+            AiBrain = GetComponent<AIBrain>();
 
-            SetState(ActorState.Idle);
+            CreateContext(dynamicGameContext);
+            Setup();
+        }
+
+        protected abstract void CreateContext(DynamicGameContext dynamicGameContext);
+
+        protected abstract void Setup();
+
+        protected void Initialize(AIContext context, IContextProvider provider)
+        {
+            _movementSystem.Init(_behaviorData.MovementProps);
+            _aiSensor.Init();
+            AiBrain.Init(context, AiPlanner, provider);
+            AiPlanner.Init(this, context, TaskService);
+            AiPlanner.TaskCompleted += OnUnitTaskCompleted;
+            AiPlanner.TaskReceived += OnUnitTaskReceived;
         }
 
         public bool IsAvailable() => 
             _currentState != ActorState.Working;
-
-        public void AttachResource(Resource resource) => 
-            _attachedResource.Attach(resource);
-
-        public void DetachResource() => 
-            _attachedResource.Detach();
-
-        public void RegisterHome(House house) => 
-            _aiContext.RegisterHome(house);
         
-        public void Hide()
-        {
-            _animatorController.enabled = false;
-            _behaviorData.Visual.SetActive(false);
-            //_movementSystem.SetActive(false);
-        }
-
-        public void Show()
-        {
-            _animatorController.enabled = true;
-            _behaviorData.Visual.SetActive(true);
-            //_movementSystem.SetActive(true);
-        }
-
         private void Update()
         {
-            _aiBrain.Decide();
+            AiBrain.Decide();
         }
 
         private void FixedUpdate()
@@ -97,7 +71,7 @@ namespace Game.Code.Logic.Units
             _aiSensor.FindObjects();
         }
 
-        private void SetState(ActorState nextState) => 
+        protected void SetState(ActorState nextState) => 
             _currentState = nextState;
 
         private void OnUnitTaskReceived(AIContext context) => 
@@ -111,9 +85,9 @@ namespace Game.Code.Logic.Units
 
         private void OnDestroy()
         {
-            _aiPlanner.Cleanup();
-            _aiPlanner.TaskCompleted -= OnUnitTaskCompleted;
-            _aiPlanner.TaskReceived -= OnUnitTaskReceived;
+            AiPlanner.Cleanup();
+            AiPlanner.TaskCompleted -= OnUnitTaskCompleted;
+            AiPlanner.TaskReceived -= OnUnitTaskReceived;
         }
     }
     

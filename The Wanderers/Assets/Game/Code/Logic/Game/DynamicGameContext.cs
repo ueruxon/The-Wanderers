@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
+using Game.Code.Logic.Actors.Villagers;
 using Game.Code.Logic.Buildings;
 using Game.Code.Logic.ResourcesLogic;
-using Game.Code.Logic.Units;
 
 namespace Game.Code.Logic.Game
 {
@@ -11,8 +11,8 @@ namespace Game.Code.Logic.Game
         private readonly Dictionary<ResourceType, List<Storage>> _storagesByType;
         private readonly Dictionary<ResourceType, Queue<Resource>> _minedResourcesByType;
 
-        private readonly Queue<Actor> _homelessActors;
-        private readonly List<Actor> _villagerActors;
+        private readonly Queue<Villager> _homelessVillagers;
+        private readonly List<Villager> _villagerActors;
 
         public DynamicGameContext()
         {
@@ -32,8 +32,8 @@ namespace Game.Code.Logic.Game
                 [ResourceType.Coal] = new()
             };
             
-            _homelessActors = new Queue<Actor>();
-            _villagerActors = new List<Actor>();
+            _homelessVillagers = new Queue<Villager>();
+            _villagerActors = new List<Villager>();
         }
         
         public void AddMinedResourceInQueue(Resource resource) => 
@@ -54,19 +54,19 @@ namespace Game.Code.Logic.Game
         public List<Storage> GetStoragesByType(ResourceType type) => 
             _storagesByType[type];
 
-        public void AddHomelessActor(Actor actor) =>
-            _homelessActors.Enqueue(actor);
+        public void AddHomelessVillager(Villager villager) =>
+            _homelessVillagers.Enqueue(villager);
         
         public int GetHomelessCount() => 
-            _homelessActors.Count;
+            _homelessVillagers.Count;
         
-        public Actor GetHomelessActor() => 
-            _homelessActors.Dequeue();
+        public Villager GetHomelessVillager() => 
+            _homelessVillagers.Dequeue();
 
-        public void AddVillager(Actor actor) => 
-            _villagerActors.Add(actor);
+        public void AddVillager(Villager villager) => 
+            _villagerActors.Add(villager);
 
-        public List<Actor> GetVillagers() => 
+        public List<Villager> GetVillagers() => 
             _villagerActors;
     }
 }

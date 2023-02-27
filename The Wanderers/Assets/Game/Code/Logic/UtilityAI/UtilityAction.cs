@@ -55,7 +55,7 @@ namespace Game.Code.Logic.UtilityAI
         public List<Consideration> GetConsiderations() => 
             _actionConsiderations;
 
-        public virtual void OnEnter(AIContext context) =>
+        public virtual void OnEnter(AIContext context, IContextProvider contextProvider) =>
             CurrentActionStatus = ActionStatus.Running;
         
         public virtual void OnFailed(AIContext context) => 
@@ -64,21 +64,23 @@ namespace Game.Code.Logic.UtilityAI
         public virtual void OnCompleted(AIContext context) => 
             CurrentActionStatus = ActionStatus.Completed;
         
-        public virtual void OnExit(AIContext context) => 
+        public virtual void OnExit(AIContext context, IContextProvider contextProvider) => 
             CurrentActionStatus = ActionStatus.Completed;
 
         protected virtual void MoveTo(AIContext context, Vector3 target) { }
 
+        public abstract void Execute(AIContext context, IContextProvider contextProvider);
+        
         public bool IsActive() => Score > 0f;
 
-        public virtual float ScoreAction(AIContext context)
+        public virtual float ScoreAction(AIContext context, IContextProvider contextProvider)
         {
             float actionScore = 1f;
             
             // собираем все значения из выбора решений
             for (int i = 0; i < _actionConsiderations.Count; i++)
             {
-                float considerationScore = _actionConsiderations[i].GetScore(context);
+                float considerationScore = _actionConsiderations[i].GetScore(context, contextProvider);
                 actionScore *= considerationScore;
 
                 TotalConsiderationScore = actionScore;
@@ -103,7 +105,5 @@ namespace Game.Code.Logic.UtilityAI
 
             return Score;
         }
-
-        public abstract void Execute(AIContext context);
     }
 }

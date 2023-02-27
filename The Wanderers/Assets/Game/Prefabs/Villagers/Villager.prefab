@@ -426,16 +426,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 6961387923947132344}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a84cce07ea42464a9258e30537494442, type: 3}
+  m_Script: {fileID: 11500000, guid: b551d83d0cd5410284c7c9f0dab0d851, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   _aiSensor: {fileID: 4894802680272290248}
   _movementSystem: {fileID: 6961387923947132342}
   _behaviorData:
     MovementProps:
-      Speed: 7
-      AngularSpeed: 1200
-      Acceleration: 500
+      Speed: 6
+      AngularSpeed: 600
+      Acceleration: 120
       StoppingDistance: 3
     Visual: {fileID: 2738023403018246063}
   _attachedResource: {fileID: 8172283395172297366}

@@ -1,5 +1,5 @@
 ﻿using System;
-using Game.Code.Logic.Units;
+using Game.Code.Logic.Actors;
 
 namespace Game.Code.Infrastructure.Services.UnitTask
 {
