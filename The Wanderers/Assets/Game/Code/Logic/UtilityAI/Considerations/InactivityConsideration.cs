@@ -17,9 +17,10 @@ namespace Game.Code.Logic.UtilityAI.Considerations
             _inactivityTimer = 0f;
         }
 
-        public override float GetScore(AIContext context, IContextProvider contextProvider)
+        public override float GetScore(IContextProvider contextProvider)
         {
-            if (context.IsGlobalCommand == false) 
+            // поведение в SO это плохо
+            if (contextProvider.GetContext().IsGlobalCommand == false) 
                 _inactivityTimer += Time.deltaTime;
             else
                 _inactivityTimer = 0;

@@ -7,9 +7,9 @@ namespace Game.Code.Logic.UtilityAI.Actions
 {
     public class IdleAction : UtilityAction
     {
-        protected override void OnTaskReceived(AIContext context)
+        protected override void OnTaskReceived(IContextProvider contextProvider)
         {
-            ICommand command = context.ActionCommand;
+            ICommand command = contextProvider.GetContext().ActionCommand;
 
             if (command is MiningCommand treeCommand)
             {
@@ -19,7 +19,7 @@ namespace Game.Code.Logic.UtilityAI.Actions
                 {
                     resourceNode.InWork();
                     
-                    context.MoveTarget = resourceNode.transform;
+                    contextProvider.GetContext().MoveTarget = resourceNode.transform;
                     CurrentActionStatus = ActionStatus.Completed;
                 }
             }
@@ -29,15 +29,12 @@ namespace Game.Code.Logic.UtilityAI.Actions
                 Resource resource = grabCommand.Resource;
                 if (resource.IsAvailable())
                 {
-                    context.MoveTarget = resource.transform;
+                    contextProvider.GetContext().MoveTarget = resource.transform;
                     CurrentActionStatus = ActionStatus.Completed;
                 }
             }
         }
         
-        public override void Execute(AIContext context, IContextProvider contextProvider)
-        {
-            
-        }
+        public override void Execute(IContextProvider contextProvider) { }
     }
 }

@@ -9,10 +9,14 @@
         
         public T GetContext<T>() where T : AIContext => 
             _aiContext as T;
+
+        public AIContext GetContext() => 
+            _aiContext;
     }
     
     public interface IContextProvider
     {
         public T GetContext<T>() where T : AIContext;
+        public AIContext GetContext();
     }
 }

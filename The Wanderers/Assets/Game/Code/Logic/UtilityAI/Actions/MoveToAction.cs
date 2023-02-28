@@ -5,15 +5,20 @@ namespace Game.Code.Logic.UtilityAI.Actions
 {
     public class MoveToAction : UtilityAction
     {
-        public override void OnEnter(AIContext context, IContextProvider contextProvider)
+        public override void OnEnter(IContextProvider contextProvider)
         {
-            base.OnEnter(context, contextProvider);
+            base.OnEnter(contextProvider);
             
-            context.GetAnimatorController().SetBool("IsWalking", true);
+            contextProvider
+                .GetContext()
+                .GetAnimatorController()
+                .SetBool("IsWalking", true);
         }
         
-        public override void Execute(AIContext context, IContextProvider contextProvider)
+        public override void Execute(IContextProvider contextProvider)
         {
+            AIContext context = contextProvider.GetContext();
+            
             Vector3 targetPosition = context.MoveTarget.position;
             
             MoveTo(context, targetPosition);
@@ -22,12 +27,15 @@ namespace Game.Code.Logic.UtilityAI.Actions
         protected override void MoveTo(AIContext context, Vector3 target) => 
             context.MovementSystem.SetDestination(target);
 
-        public override void OnExit(AIContext context, IContextProvider contextProvider)
+        public override void OnExit(IContextProvider contextProvider)
         {
-            base.OnExit(context, contextProvider);
-
-            context.MovementSystem.Stop();
-            context.GetAnimatorController().SetBool("IsWalking", false);
+            base.OnExit(contextProvider);
+            
+            contextProvider.GetContext().MovementSystem.Stop();
+            contextProvider
+                .GetContext()
+                .GetAnimatorController()
+                .SetBool("IsWalking", false);
         }
     }
 }

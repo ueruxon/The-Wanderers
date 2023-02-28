@@ -13,13 +13,13 @@ namespace Game.Code.Logic.UtilityAI.Actions
         
         private IInteractable _interactable;
         
-        public override void OnEnter(AIContext context, IContextProvider contextProvider)
+        public override void OnEnter(IContextProvider contextProvider)
         {
-            base.OnEnter(context, contextProvider);
+            base.OnEnter(contextProvider);
             
             _currentHitTimer = _hitCooldown;
             
-            ICommand command = context.ActionCommand;
+            ICommand command = contextProvider.GetContext().ActionCommand;
             
             // для теста
             //context.GetAnimatorController().SetBool("IsWalking", false);
@@ -28,14 +28,17 @@ namespace Game.Code.Logic.UtilityAI.Actions
                 _interactable = chopTreeCommand.ResourceNode;
         }
 
-        public override void Execute(AIContext context, IContextProvider contextProvider)
+        public override void Execute(IContextProvider contextProvider)
         {
             _currentHitTimer -= Time.deltaTime;
 
             if (_currentHitTimer < 0f)
             {
                 // убрать аниматор
-                context.GetAnimatorController().SetTrigger("Hit");
+                contextProvider
+                    .GetContext()
+                    .GetAnimatorController()
+                    .SetTrigger("Hit");
 
                 _currentHitTimer = _hitCooldown;
                 _interactable.Interact();

@@ -8,21 +8,27 @@ namespace Game.Code.Logic.UtilityAI.Actions
     {
         private bool _alreadyRest;
 
-        public override void OnEnter(AIContext context, IContextProvider contextProvider)
+        public override void OnEnter(IContextProvider contextProvider)
         {
-            base.OnEnter(context, contextProvider);
+            base.OnEnter(contextProvider);
 
             _alreadyRest = false;
 
             House house = contextProvider.GetContext<VillagerContext>().GetHouse();
 
-            context.MovementSystem.SetDestination(house.GetEnterPoint().position);
-            context.GetAnimatorController().SetBool("IsWalking", true);
+            contextProvider
+                .GetContext()
+                .MovementSystem
+                .SetDestination(house.GetEnterPoint().position);
+            contextProvider
+                .GetContext()
+                .GetAnimatorController()
+                .SetBool("IsWalking", true);
         }
 
-        public override void Execute(AIContext context, IContextProvider contextProvider)
+        public override void Execute(IContextProvider contextProvider)
         {
-            if (context.MovementSystem.ReachedDestination())
+            if (contextProvider.GetContext().MovementSystem.ReachedDestination())
             {
                 if (_alreadyRest == false)
                 {
@@ -41,12 +47,15 @@ namespace Game.Code.Logic.UtilityAI.Actions
             }
         }
 
-        public override void OnExit(AIContext context, IContextProvider contextProvider)
+        public override void OnExit(IContextProvider contextProvider)
         {
-            base.OnExit(context, contextProvider);
+            base.OnExit(contextProvider);
             
             contextProvider.GetContext<VillagerContext>().CurrentActor.Show();
-            context.GetAnimatorController().SetBool("IsWalking", false);
+            contextProvider
+                .GetContext()
+                .GetAnimatorController()
+                .SetBool("IsWalking", false);
         }
     }
 }

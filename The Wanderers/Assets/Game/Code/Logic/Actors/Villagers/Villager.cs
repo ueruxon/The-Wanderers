@@ -23,7 +23,7 @@ namespace Game.Code.Logic.Actors.Villagers
 
         protected override void Setup()
         {
-            Initialize(_context, _contextProvider);
+            Initialize(_contextProvider);
             
             _attachedResource.Init(transform);
             SetState(ActorState.Idle);

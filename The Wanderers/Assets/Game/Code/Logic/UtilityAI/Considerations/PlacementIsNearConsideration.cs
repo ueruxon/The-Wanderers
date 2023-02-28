@@ -8,8 +8,10 @@ namespace Game.Code.Logic.UtilityAI.Considerations
         menuName = "UtilityAI/Considerations/PlacementIsNear")]
     public class PlacementIsNearConsideration : Consideration
     {
-        public override float GetScore(AIContext context, IContextProvider contextProvider)
+        public override float GetScore(IContextProvider contextProvider)
         {
+            AIContext context = contextProvider.GetContext();
+            
             if (context.IsGlobalCommand)
             {
                 if (context.ActionCommand is GrabResourceCommand)

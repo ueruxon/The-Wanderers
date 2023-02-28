@@ -44,7 +44,7 @@ namespace Game.Code.Logic.UtilityAI
             }
         }
 
-        protected virtual void OnTaskReceived(AIContext context) { }
+        protected virtual void OnTaskReceived(IContextProvider contextProvider) { }
 
         protected void CompleteTask() => 
             _aIPlanner.CompleteGlobalTask();
@@ -55,32 +55,32 @@ namespace Game.Code.Logic.UtilityAI
         public List<Consideration> GetConsiderations() => 
             _actionConsiderations;
 
-        public virtual void OnEnter(AIContext context, IContextProvider contextProvider) =>
+        public virtual void OnEnter(IContextProvider contextProvider) =>
             CurrentActionStatus = ActionStatus.Running;
         
-        public virtual void OnFailed(AIContext context) => 
+        public virtual void OnFailed(IContextProvider contextProvider) => 
             CurrentActionStatus = ActionStatus.Failed;
         
-        public virtual void OnCompleted(AIContext context) => 
+        public virtual void OnCompleted(IContextProvider contextProvider) => 
             CurrentActionStatus = ActionStatus.Completed;
         
-        public virtual void OnExit(AIContext context, IContextProvider contextProvider) => 
+        public virtual void OnExit(IContextProvider contextProvider) => 
             CurrentActionStatus = ActionStatus.Completed;
 
         protected virtual void MoveTo(AIContext context, Vector3 target) { }
 
-        public abstract void Execute(AIContext context, IContextProvider contextProvider);
+        public abstract void Execute(IContextProvider contextProvider);
         
         public bool IsActive() => Score > 0f;
 
-        public virtual float ScoreAction(AIContext context, IContextProvider contextProvider)
+        public virtual float ScoreAction(IContextProvider contextProvider)
         {
             float actionScore = 1f;
             
             // собираем все значения из выбора решений
             for (int i = 0; i < _actionConsiderations.Count; i++)
             {
-                float considerationScore = _actionConsiderations[i].GetScore(context, contextProvider);
+                float considerationScore = _actionConsiderations[i].GetScore(contextProvider);
                 actionScore *= considerationScore;
 
                 TotalConsiderationScore = actionScore;

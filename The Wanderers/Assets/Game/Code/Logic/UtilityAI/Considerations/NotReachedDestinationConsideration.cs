@@ -6,9 +6,9 @@ namespace Game.Code.Logic.UtilityAI.Considerations
     [CreateAssetMenu(fileName = "NotReachedDestination", menuName = "UtilityAI/Considerations/NotReachedDestination")]
     public class NotReachedDestinationConsideration : Consideration
     {
-        public override float GetScore(AIContext context, IContextProvider contextProvider)
+        public override float GetScore(IContextProvider contextProvider)
         {
-            Score = context.MovementSystem.ReachedDestination() ? 0f : 1f;
+            Score = contextProvider.GetContext().MovementSystem.ReachedDestination() ? 0f : 1f;
             return Score;;
         }
     }

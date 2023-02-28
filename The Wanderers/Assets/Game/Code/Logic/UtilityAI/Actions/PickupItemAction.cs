@@ -10,11 +10,11 @@ namespace Game.Code.Logic.UtilityAI.Actions
     {
         private Transform _target;
         
-        public override void OnEnter(AIContext context, IContextProvider contextProvider)
+        public override void OnEnter(IContextProvider contextProvider)
         {
-            base.OnEnter(context, contextProvider);
+            base.OnEnter(contextProvider);
             
-            ICommand command = context.ActionCommand;
+            ICommand command = contextProvider.GetContext().ActionCommand;
             
             if (command is GrabResourceCommand grabCommand)
             {
@@ -31,12 +31,12 @@ namespace Game.Code.Logic.UtilityAI.Actions
             }
         }
 
-        public override void Execute(AIContext context, IContextProvider contextProvider)
+        public override void Execute(IContextProvider contextProvider)
         {
             // может какая-то анимация поднятия, или еще че
             // после того как подняли
-
-            context.MoveTarget = _target;
+            
+            contextProvider.GetContext().MoveTarget = _target;
             CurrentActionStatus = ActionStatus.Completed;
         }
     }

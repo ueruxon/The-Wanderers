@@ -50,12 +50,12 @@ namespace Game.Code.Logic.Actors
 
         protected abstract void Setup();
 
-        protected void Initialize(AIContext context, IContextProvider provider)
+        protected void Initialize(IContextProvider contextProvider)
         {
             _movementSystem.Init(_behaviorData.MovementProps);
             _aiSensor.Init();
-            AiBrain.Init(context, AiPlanner, provider);
-            AiPlanner.Init(this, context, TaskService);
+            AiBrain.Init(AiPlanner, contextProvider);
+            AiPlanner.Init(this, contextProvider, TaskService);
             AiPlanner.TaskCompleted += OnUnitTaskCompleted;
             AiPlanner.TaskReceived += OnUnitTaskReceived;
         }
@@ -76,7 +76,7 @@ namespace Game.Code.Logic.Actors
         protected void SetState(ActorState nextState) => 
             _currentState = nextState;
 
-        private void OnUnitTaskReceived(AIContext context) => 
+        private void OnUnitTaskReceived(IContextProvider contextProvider) => 
             SetState(ActorState.Working);
 
         private void OnUnitTaskCompleted(GlobalActorTask task)

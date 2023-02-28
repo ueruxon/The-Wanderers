@@ -7,7 +7,7 @@ namespace Game.Code.Logic.UtilityAI.Considerations
     [CreateAssetMenu(fileName = "IsHomeowner", menuName = "UtilityAI/Considerations/IsHomeowner")]
     public class IsHomeownerConsideration : Consideration
     {
-        public override float GetScore(AIContext context, IContextProvider contextProvider)
+        public override float GetScore(IContextProvider contextProvider)
         {
             Score = contextProvider.GetContext<VillagerContext>().Homeowner ? 1f : 0f;
             return Score;

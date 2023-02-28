@@ -9,26 +9,28 @@ namespace Game.Code.Logic.UtilityAI.Actions
     {
         private Storage _storage;
         
-        public override void OnEnter(AIContext context, IContextProvider contextProvider)
+        public override void OnEnter(IContextProvider contextProvider)
         {
-            base.OnEnter(context, contextProvider);
-            
-            ICommand command = context.ActionCommand;
+            base.OnEnter(contextProvider);
+
+            ICommand command = contextProvider.GetContext().ActionCommand;
             
             if (command is GrabResourceCommand grabCommand) 
                 _storage = grabCommand.Storage;
         }
         
-        public override void Execute(AIContext context, IContextProvider contextProvider)
+        public override void Execute(IContextProvider contextProvider)
         {
             // анимация бросания вещи?
             // еще чето?
 
-            if (context.MovementSystem.ReachedDestination())
+            if (contextProvider.GetContext().MovementSystem.ReachedDestination())
             {
-                _storage.AddResource(contextProvider.GetContext<VillagerContext>().PickupResource);
-                contextProvider.GetContext<VillagerContext>().SetPickupResource(null);
-                contextProvider.GetContext<VillagerContext>().CurrentActor.DetachResource();
+                VillagerContext villagerContext = contextProvider.GetContext<VillagerContext>();
+                
+                _storage.AddResource(villagerContext.PickupResource);
+                villagerContext.SetPickupResource(null);
+                villagerContext.CurrentActor.DetachResource();
 
                 CompleteTask();
                 CurrentActionStatus = ActionStatus.Completed;

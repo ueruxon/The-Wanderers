@@ -12,10 +12,11 @@ namespace Game.Code.Logic.UtilityAI
     [RequireComponent(typeof(AIBrain))]
     public class AIPlanner : MonoBehaviour
     {
-        public event Action<AIContext> TaskReceived;
+        public event Action<IContextProvider> TaskReceived;
         public event Action<GlobalActorTask> TaskCompleted;
         
         private IActorTaskService _taskService;
+        private IContextProvider _contextProvider;
         private AIContext _aiContext;
         private Actor _currentActor;
 
@@ -25,11 +26,13 @@ namespace Game.Code.Logic.UtilityAI
         private IdleCommand _baseIdleCommand;
         private GlobalActorTask _baseIdleTask;
 
-        public void Init(Actor actor, AIContext aiContext,
+        public void Init(Actor actor,
+            IContextProvider contextProvider,
             IActorTaskService taskService)
         {
             _currentActor = actor;
-            _aiContext = aiContext;
+            _contextProvider = contextProvider;
+            _aiContext = _contextProvider.GetContext();
             _taskService = taskService;
             _taskService.NotifyActor += OnNotifyUnitAboutTask;
 
@@ -72,7 +75,7 @@ namespace Game.Code.Logic.UtilityAI
             
             _aiContext.SetActionCommand(_currentTask.GetCommand());
 
-            TaskReceived?.Invoke(_aiContext);
+            TaskReceived?.Invoke(_contextProvider);
         }
 
         public void Cleanup() =>
