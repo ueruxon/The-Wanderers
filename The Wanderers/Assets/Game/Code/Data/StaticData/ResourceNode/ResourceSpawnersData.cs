@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Game.Code.Logic.ResourcesLogic;
 using UnityEngine;
 
-namespace Game.Code.Data.StaticData.ResourceNodeData
+namespace Game.Code.Data.StaticData.ResourceNode
 {
     [CreateAssetMenu(fileName = "ResourceSpawners", menuName = "Resources/ResourceSpawners", order = 0)]
     public class ResourceSpawnersData : ScriptableObject

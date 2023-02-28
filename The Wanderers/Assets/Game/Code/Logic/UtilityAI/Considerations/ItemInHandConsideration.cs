@@ -1,4 +1,5 @@
-﻿using Game.Code.Logic.UtilityAI.Context;
+﻿using Game.Code.Logic.Actors.Villagers;
+using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
 
 namespace Game.Code.Logic.UtilityAI.Considerations
@@ -8,7 +9,7 @@ namespace Game.Code.Logic.UtilityAI.Considerations
     {
         public override float GetScore(AIContext context, IContextProvider contextProvider)
         {
-            Score = context.PickupResource is not null ? 1 : 0;
+            Score = contextProvider.GetContext<VillagerContext>().PickupResource is not null ? 1 : 0;
             return Score;
         }
     }

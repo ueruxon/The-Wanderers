@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Game.Code.Common;
 using UnityEngine;
 using DG.Tweening;
-using Game.Code.Data.StaticData.ResourceNodeData;
+using Game.Code.Data.StaticData.ResourceNode;
 using Game.Code.Extensions;
 using MoreMountains.Feedbacks;
 

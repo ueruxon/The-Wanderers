@@ -17,7 +17,7 @@ namespace Game.Code.Infrastructure.Core
 
         private void Awake()
         {
-            _gameInstaller = new GameInstaller(this, _selectionHandler, _cameraController);
+            _gameInstaller = new GameInstaller(_gameConfig, this, _selectionHandler, _cameraController);
         }
     }
 }

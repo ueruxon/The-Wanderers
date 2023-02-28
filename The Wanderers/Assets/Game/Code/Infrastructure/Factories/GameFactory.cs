@@ -1,7 +1,12 @@
 ﻿using System.Collections.Generic;
-using Game.Code.Data.StaticData.ResourceNodeData;
+using Game.Code.Data.StaticData.Actors;
+using Game.Code.Data.StaticData.ResourceNode;
 using Game.Code.Infrastructure.Services.StaticData;
+using Game.Code.Infrastructure.Services.UnitTask;
+using Game.Code.Logic.Actors;
+using Game.Code.Logic.Game;
 using Game.Code.Logic.ResourcesLogic;
+using Unity.Mathematics;
 using UnityEngine;
 
 namespace Game.Code.Infrastructure.Factories
@@ -9,12 +14,18 @@ namespace Game.Code.Infrastructure.Factories
     public class GameFactory : IResourceMiningFactory
     {
         private readonly StaticDataService _staticDataService;
+        private readonly DynamicGameContext _dynamicGameContext;
+        private readonly IActorTaskService _actorTaskService;
 
-        public GameFactory(StaticDataService staticDataService)
+        public GameFactory(StaticDataService staticDataService, 
+            DynamicGameContext dynamicGameContext, 
+            IActorTaskService actorTaskService)
         {
             _staticDataService = staticDataService;
+            _dynamicGameContext = dynamicGameContext;
+            _actorTaskService = actorTaskService;
         }
-        
+
         public List<ResourceNodeSpawner> CreateNodeSpawners()
         {
             List<ResourceNodeSpawner> nodeSpawners = new List<ResourceNodeSpawner>();
@@ -54,6 +65,17 @@ namespace Game.Code.Infrastructure.Factories
             resource.name = $"Resource: {type.ToString()}, Position: {resource.transform.position.x}";
             
             return resource;
+        }
+
+        public T CreateActor<T>(ActorType actorType, GameObject actorsContainer, Vector3 at) where T : Actor
+        {
+            ActorData actorData = _staticDataService.GetDataForActor(actorType);
+            T actor = Object.Instantiate(actorData.Prefab, at, quaternion.identity) as T;
+            actor.Construct(actorData, _dynamicGameContext, _actorTaskService);
+            actor.name = $"{actorType.ToString()}";
+            actor.transform.SetParent(actorsContainer.transform);
+
+            return actor;
         }
     }
 }

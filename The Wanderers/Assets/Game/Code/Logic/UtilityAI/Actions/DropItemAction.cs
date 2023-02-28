@@ -26,8 +26,7 @@ namespace Game.Code.Logic.UtilityAI.Actions
 
             if (context.MovementSystem.ReachedDestination())
             {
-                _storage.AddResource(context.PickupResource);
-                
+                _storage.AddResource(contextProvider.GetContext<VillagerContext>().PickupResource);
                 contextProvider.GetContext<VillagerContext>().SetPickupResource(null);
                 contextProvider.GetContext<VillagerContext>().CurrentActor.DetachResource();
 

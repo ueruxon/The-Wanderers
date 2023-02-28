@@ -1,4 +1,5 @@
-﻿using Game.Code.Logic.UtilityAI.Commander;
+﻿using Game.Code.Logic.Actors.Villagers;
+using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
 
@@ -14,7 +15,8 @@ namespace Game.Code.Logic.UtilityAI.Considerations
             {
                 if (context.ActionCommand is GrabResourceCommand)
                 {
-                    if (context.Sensor.IsResourceObject() && context.PickupResource is null)
+                    if (context.Sensor.IsResourceObject() 
+                        && contextProvider.GetContext<VillagerContext>().PickupResource is null)
                     {
                         Score = 1;
                         return Score;

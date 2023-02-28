@@ -31,42 +31,42 @@ namespace Game.Code.Infrastructure.Core
         private DynamicGameContext _dynamicGameContext;
         private ActorTaskService _taskService;
 
-        private void Awake()
-        {
-            // глобальный контекст должен быть доступен из любого места? Сервис?
-            _dynamicGameContext = new DynamicGameContext();
-            _taskService = new ActorTaskService(_selectionHandler, this);
-            
-            foreach (Storage storage in _storages)
-            {
-                storage.Init();
-                _dynamicGameContext.AddStorageInList(storage);
-            }
-        
-            for (int i = 0; i < _unitsCount; i++)
-            {
-                Vector3 spawnPoint = new Vector3(
-                    transform.position.x + i, 
-                    transform.position.y, 
-                    transform.position.z + i);
-                
-                Villager actor = Instantiate(_actorPrefab, spawnPoint, Quaternion.identity);
-                actor.Construct(_dynamicGameContext, _taskService);
-                actor.name = $"Villager: {i + 1}";
-        
-                // должна делать фабрика
-                _dynamicGameContext.AddVillager(actor);
-                _dynamicGameContext.AddHomelessVillager(actor);
-            }
-        
-            
-            //для теста домов
-            foreach (House house in _testHouses)
-            {
-                house.Init();
-                OnHouseBuilt(house);
-            }
-        }
+        // private void Awake()
+        // {
+        //     // глобальный контекст должен быть доступен из любого места? Сервис?
+        //     _dynamicGameContext = new DynamicGameContext();
+        //     _taskService = new ActorTaskService(_selectionHandler, this);
+        //     
+        //     foreach (Storage storage in _storages)
+        //     {
+        //         storage.Init();
+        //         _dynamicGameContext.AddStorageInList(storage);
+        //     }
+        //
+        //     for (int i = 0; i < _unitsCount; i++)
+        //     {
+        //         Vector3 spawnPoint = new Vector3(
+        //             transform.position.x + i, 
+        //             transform.position.y, 
+        //             transform.position.z + i);
+        //         
+        //         Villager actor = Instantiate(_actorPrefab, spawnPoint, Quaternion.identity);
+        //         actor.Construct(_dynamicGameContext, _taskService);
+        //         actor.name = $"Villager: {i + 1}";
+        //
+        //         // должна делать фабрика
+        //         _dynamicGameContext.AddVillager(actor);
+        //         _dynamicGameContext.AddHomelessVillager(actor);
+        //     }
+        //
+        //     
+        //     //для теста домов
+        //     foreach (House house in _testHouses)
+        //     {
+        //         house.Init();
+        //         OnHouseBuilt(house);
+        //     }
+        // }
 
         private void Update()
         {

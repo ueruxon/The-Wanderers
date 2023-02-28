@@ -1,5 +1,5 @@
 ﻿using System;
-using Game.Code.Data.StaticData.ResourceNodeData;
+using Game.Code.Data.StaticData.ResourceNode;
 using Game.Code.Infrastructure.Factories;
 using UnityEngine;
 using Random = UnityEngine.Random;

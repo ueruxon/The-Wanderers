@@ -1,7 +1,7 @@
 ﻿using System;
+using Game.Code.Data.StaticData.Actors;
 using Game.Code.Infrastructure.Services.UnitTask;
 using Game.Code.Logic.Game;
-using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.UtilityAI;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
@@ -26,21 +26,23 @@ namespace Game.Code.Logic.Actors
         protected IActorTaskService TaskService;
         protected AIPlanner AiPlanner;
         protected AIBrain AiBrain;
-
+        
+        private ActorData _actorData;
         protected Animator AnimatorController;
-        private Resource _resourceInHand;
 
         private ActorState _currentState;
 
-        public void Construct(DynamicGameContext dynamicGameContext, IActorTaskService taskService)
+        public void Construct(ActorData actorData,
+            DynamicGameContext gameContext,
+            IActorTaskService taskService)
         {
+            _actorData = actorData;
             TaskService = taskService;
-            
             AnimatorController = GetComponent<Animator>();
             AiPlanner = GetComponent<AIPlanner>();
             AiBrain = GetComponent<AIBrain>();
 
-            CreateContext(dynamicGameContext);
+            CreateContext(gameContext);
             Setup();
         }
 

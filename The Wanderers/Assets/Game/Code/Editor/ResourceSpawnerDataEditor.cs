@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using Game.Code.Data.StaticData.ResourceNodeData;
+using Game.Code.Data.StaticData.ResourceNode;
 using Game.Code.Logic.ResourcesLogic;
 using UnityEditor;
 using UnityEngine;

@@ -28,10 +28,12 @@ namespace Game.Code.Logic.UtilityAI.Actions
                 {
                     _alreadyRest = true;
 
-                    context.MovementSystem.Stop();
-                    contextProvider.GetContext<VillagerContext>().CurrentActor.Hide();
-                    context.CurrentActor.transform.position = contextProvider
-                        .GetContext<VillagerContext>()
+                    VillagerContext villagerContext = contextProvider.GetContext<VillagerContext>();
+                    Villager villager = villagerContext.CurrentActor;
+                    
+                    villagerContext.MovementSystem.Stop();
+                    villager.Hide();
+                    villager.transform.position = villagerContext
                         .GetHouse()
                         .GetEnterPoint()
                         .position;

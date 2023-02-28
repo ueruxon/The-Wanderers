@@ -29,8 +29,7 @@ namespace Game.Code.Logic.UtilityAI.Context
         }
 
         public MovementSystemBase MovementSystem { get; }
-        public Actor CurrentActor { get; }
-        public Resource PickupResource { get; private set;}
+        public Transform ActorTransform { get; }
         public ICommand ActionCommand { get; private set;}
         public bool IsGlobalCommand { get; private set; }
         
@@ -43,7 +42,7 @@ namespace Game.Code.Logic.UtilityAI.Context
             _animatorController = animatorController;
             
             MovementSystem = movementSystemBase;
-            CurrentActor = actor;
+            ActorTransform = actor.transform;
             
             //MoveTarget = CurrentActor.transform;
         }

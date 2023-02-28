@@ -12,6 +12,7 @@ namespace Game.Code.Infrastructure.Core
 {
     public class GameInstaller
     {
+        private readonly GameConfig _gameConfig;
         private readonly ICoroutineRunner _coroutineRunner;
         private readonly SelectionHandler _selectionHandler;
         private readonly CameraController _cameraController;
@@ -19,9 +20,10 @@ namespace Game.Code.Infrastructure.Core
         private GameInitializer _gameInitializer;
         private GameLoop _gameLoop;
 
-        public GameInstaller(ICoroutineRunner gameRunner, SelectionHandler selectionHandler,
+        public GameInstaller(GameConfig gameConfig, ICoroutineRunner gameRunner, SelectionHandler selectionHandler,
             CameraController cameraController)
         {
+            _gameConfig = gameConfig;
             _coroutineRunner = gameRunner;
             _selectionHandler = selectionHandler;
             _cameraController = cameraController;
@@ -34,16 +36,17 @@ namespace Game.Code.Infrastructure.Core
             AssetProvider assetProvider = new AssetProvider();
             StaticDataService staticDataService = new StaticDataService(assetProvider);
             ActorTaskService actorTaskService = new ActorTaskService(_selectionHandler, _coroutineRunner);
-            GameFactory gameFactory = new GameFactory(staticDataService);
             DynamicGameContext dynamicGameContext = new DynamicGameContext();
+            GameFactory gameFactory = new GameFactory(staticDataService, dynamicGameContext, actorTaskService);
             ResourceMiningController miningController = new ResourceMiningController(dynamicGameContext, gameFactory, actorTaskService);
+            ActorSpawner actorSpawner = new ActorSpawner(_gameConfig, gameFactory, dynamicGameContext);
 
             _gameInitializer = new GameInitializer(
                 _selectionHandler, 
                 _cameraController,
-                staticDataService, 
-                gameFactory, 
-                miningController);
+                staticDataService,
+                miningController, 
+                actorSpawner);
         }
     }
 }
