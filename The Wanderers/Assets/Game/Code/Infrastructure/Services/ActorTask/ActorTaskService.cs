@@ -75,7 +75,7 @@ namespace Game.Code.Infrastructure.Services.UnitTask
                     if (_taskPool.Contains(resourceNode.ID) == false)
                     {
                         resourceNode.PrepareForWork(true);
-                        
+
                         GlobalActorTask task = _taskFactory.CreateMiningTask(resourceNode);
                         _taskPool.AddTask(task);
                     }
@@ -184,13 +184,16 @@ namespace Game.Code.Infrastructure.Services.UnitTask
             for (int i = 0; i < taskCount; i++)
             {
                 GlobalActorTask task = _availableTasksQueue.Dequeue();
+                AddTask(task);
                 
                 if (task.GetID() == taskID)
                     return true;
-
-                AddTask(task);
             }
-            
+
+            foreach (GlobalActorTask task in _tasksInWork)
+                if (task.GetID() == taskID)
+                    return true;
+
             return false;
         }
     }

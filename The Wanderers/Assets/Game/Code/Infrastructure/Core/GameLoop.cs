@@ -1,25 +1,15 @@
 using System.Collections.Generic;
-using Game.Code.Common;
 using Game.Code.Infrastructure.Services.UnitTask;
 using Game.Code.Logic.Actors.Villagers;
 using Game.Code.Logic.Buildings;
-using Game.Code.Logic.Camera;
 using Game.Code.Logic.Game;
 using Game.Code.Logic.ResourcesLogic;
-using Game.Code.Logic.Selection;
 using UnityEngine;
 
 namespace Game.Code.Infrastructure.Core
 {
-    public class GameLoop : MonoBehaviour, ICoroutineRunner
+    public class GameLoop : MonoBehaviour
     {
-        [SerializeField] private CameraController _cameraController;
-        [SerializeField] private SelectionHandler _selectionHandler;
-
-        [SerializeField] private Villager _actorPrefab;
-        [SerializeField] private int _unitsCount = 3;
-        [Space(8)]
-        
         [SerializeField] private House _housePrefab;
         [SerializeField] private List<House> _testHouses;
         [Space(8)]
@@ -31,42 +21,21 @@ namespace Game.Code.Infrastructure.Core
         private DynamicGameContext _dynamicGameContext;
         private ActorTaskService _taskService;
 
-        // private void Awake()
-        // {
-        //     // глобальный контекст должен быть доступен из любого места? Сервис?
-        //     _dynamicGameContext = new DynamicGameContext();
-        //     _taskService = new ActorTaskService(_selectionHandler, this);
-        //     
-        //     foreach (Storage storage in _storages)
-        //     {
-        //         storage.Init();
-        //         _dynamicGameContext.AddStorageInList(storage);
-        //     }
-        //
-        //     for (int i = 0; i < _unitsCount; i++)
-        //     {
-        //         Vector3 spawnPoint = new Vector3(
-        //             transform.position.x + i, 
-        //             transform.position.y, 
-        //             transform.position.z + i);
-        //         
-        //         Villager actor = Instantiate(_actorPrefab, spawnPoint, Quaternion.identity);
-        //         actor.Construct(_dynamicGameContext, _taskService);
-        //         actor.name = $"Villager: {i + 1}";
-        //
-        //         // должна делать фабрика
-        //         _dynamicGameContext.AddVillager(actor);
-        //         _dynamicGameContext.AddHomelessVillager(actor);
-        //     }
-        //
-        //     
-        //     //для теста домов
-        //     foreach (House house in _testHouses)
-        //     {
-        //         house.Init();
-        //         OnHouseBuilt(house);
-        //     }
-        // }
+        private void Awake()
+        {
+            // foreach (Storage storage in _storages)
+            // {
+            //     storage.Init();
+            //     _dynamicGameContext.AddStorageInList(storage);
+            // }
+            //
+            // //для теста домов
+            // foreach (House house in _testHouses)
+            // {
+            //     house.Init();
+            //     OnHouseBuilt(house);
+            // }
+        }
 
         private void Update()
         {

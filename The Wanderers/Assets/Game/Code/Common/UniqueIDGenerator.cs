@@ -7,7 +7,7 @@ namespace Game.Code.Common
     {
         public static string GenerateID(GameObject gameObject)
         {
-            string id = $"{gameObject.name}_{Guid.NewGuid().ToString()}";
+            string id = $"_{Guid.NewGuid().ToString()}";
             return id;
         }
     }

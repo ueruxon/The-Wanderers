@@ -14,7 +14,9 @@ namespace Game.Code.Logic.Game
 
         private List<ResourceNodeSpawner> _spawners;
 
-        public ResourceMiningController(DynamicGameContext dynamicGameContext, GameFactory gameFactory, ActorTaskService taskService)
+        public ResourceMiningController(DynamicGameContext dynamicGameContext, 
+            GameFactory gameFactory, 
+            ActorTaskService taskService)
         {
             _dynamicGameContext = dynamicGameContext;
             _gameFactory = gameFactory;
