@@ -1,10 +1,11 @@
 ﻿using System.Collections.Generic;
+using Game.Code.Common;
 using Game.Code.Data.StaticData.Actors;
 using Game.Code.Data.StaticData.ResourceNode;
+using Game.Code.Infrastructure.Context;
+using Game.Code.Infrastructure.Services.ActorTask;
 using Game.Code.Infrastructure.Services.StaticData;
-using Game.Code.Infrastructure.Services.UnitTask;
 using Game.Code.Logic.Actors;
-using Game.Code.Logic.Game;
 using Game.Code.Logic.ResourcesLogic;
 using Unity.Mathematics;
 using UnityEngine;
@@ -72,7 +73,7 @@ namespace Game.Code.Infrastructure.Factories
             ActorData actorData = _staticDataService.GetDataForActor(actorType);
             T actor = Object.Instantiate(actorData.Prefab, at, quaternion.identity) as T;
             actor.Construct(actorData, _dynamicGameContext, _actorTaskService);
-            actor.name = $"{actorType.ToString()}";
+            actor.name = $"{actorType.ToString()} + {UniqueIDGenerator.GenerateID(actor.gameObject)}";
             actor.transform.SetParent(actorsContainer.transform);
 
             return actor;

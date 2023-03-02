@@ -1,9 +1,10 @@
 ﻿using System.Collections.Generic;
 using Game.Code.Logic.Actors.Villagers;
 using Game.Code.Logic.Buildings;
+using Game.Code.Logic.Buildings.ProductionBuildings;
 using Game.Code.Logic.ResourcesLogic;
 
-namespace Game.Code.Logic.Game
+namespace Game.Code.Infrastructure.Context
 {
     // глобальный контекст игры, который содержит данные о сессии
     public class DynamicGameContext
@@ -13,6 +14,7 @@ namespace Game.Code.Logic.Game
 
         private readonly Queue<Villager> _homelessVillagers;
         private readonly List<Villager> _villagerActors;
+        private readonly List<IProductionBuilding> _productionBuildings;
 
         public DynamicGameContext()
         {
@@ -34,6 +36,7 @@ namespace Game.Code.Logic.Game
             
             _homelessVillagers = new Queue<Villager>();
             _villagerActors = new List<Villager>();
+            _productionBuildings = new List<IProductionBuilding>();
         }
         
         public void AddMinedResourceInQueue(Resource resource) => 
@@ -68,5 +71,11 @@ namespace Game.Code.Logic.Game
 
         public List<Villager> GetVillagers() => 
             _villagerActors;
+
+        public void AddProductionBuilding(IProductionBuilding productionBuilding) => 
+            _productionBuildings.Add(productionBuilding);
+
+        public List<IProductionBuilding> GetProductionBuildings() => 
+            _productionBuildings;
     }
 }

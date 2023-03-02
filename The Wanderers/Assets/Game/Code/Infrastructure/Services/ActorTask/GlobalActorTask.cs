@@ -1,7 +1,7 @@
 ﻿using System;
 using Game.Code.Logic.UtilityAI.Commander;
 
-namespace Game.Code.Infrastructure.Services.UnitTask
+namespace Game.Code.Infrastructure.Services.ActorTask
 {
     public class GlobalActorTask
     {

@@ -1,23 +1,21 @@
 using System.Collections.Generic;
-using Game.Code.Infrastructure.Services.UnitTask;
+using Game.Code.Infrastructure.Context;
+using Game.Code.Infrastructure.Services.ActorTask;
 using Game.Code.Logic.Actors.Villagers;
 using Game.Code.Logic.Buildings;
-using Game.Code.Logic.Game;
 using Game.Code.Logic.ResourcesLogic;
 using UnityEngine;
 
 namespace Game.Code.Infrastructure.Core
 {
-    public class GameLoop : MonoBehaviour
+    public class GameLoop
     {
-        [SerializeField] private House _housePrefab;
-        [SerializeField] private List<House> _testHouses;
-        [Space(8)]
+        private House _housePrefab;
+        private List<House> _testHouses;
 
-        [SerializeField] private Storage _storagePrefab;
-        [SerializeField] private List<Storage> _storages;
-        [Space(8)]
-        
+        private Storage _storagePrefab;
+        private List<Storage> _storages;
+
         private DynamicGameContext _dynamicGameContext;
         private ActorTaskService _taskService;
 
@@ -43,7 +41,7 @@ namespace Game.Code.Infrastructure.Core
             if (Input.GetKeyDown(KeyCode.K))
             {
                 Vector3 pos = new Vector3(57, 0, 20);
-                Storage storage = Instantiate(_storagePrefab, pos, Quaternion.identity);
+                Storage storage = Object.Instantiate(_storagePrefab, pos, Quaternion.identity);
                 storage.Init();
                 // ивент создания??
                 OnStorageBuilt(storage);
@@ -53,7 +51,7 @@ namespace Game.Code.Infrastructure.Core
             if (Input.GetKeyDown(KeyCode.L))
             {
                 Vector3 pos = new Vector3(34, 0, 37);
-                Storage storage = Instantiate(_storagePrefab, pos, Quaternion.identity);
+                Storage storage = Object.Instantiate(_storagePrefab, pos, Quaternion.identity);
                 storage.Init();
                 // ивент создания??
                 OnStorageBuilt(storage);
@@ -63,7 +61,7 @@ namespace Game.Code.Infrastructure.Core
             if (Input.GetKeyDown(KeyCode.J))
             {
                 Vector3 pos = new Vector3(25.48f, 0, -25);
-                House house = Instantiate(_housePrefab, pos, Quaternion.identity);
+                House house = Object.Instantiate(_housePrefab, pos, Quaternion.identity);
                 house.Init();
                 // ивент создания??
                 OnHouseBuilt(house);

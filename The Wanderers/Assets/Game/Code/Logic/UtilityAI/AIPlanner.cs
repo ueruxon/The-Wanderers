@@ -1,8 +1,7 @@
 ﻿using System;
 using Game.Code.Infrastructure.Core;
-using Game.Code.Infrastructure.Services.UnitTask;
+using Game.Code.Infrastructure.Services.ActorTask;
 using Game.Code.Logic.Actors;
-using Game.Code.Logic.Game;
 using Game.Code.Logic.UtilityAI.Commander;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;
@@ -43,10 +42,10 @@ namespace Game.Code.Logic.UtilityAI
             _aiContext.SetActionCommand(_baseIdleCommand);
         }
 
-        public void CompleteGlobalTask()
+        public void CompleteTask()
         {
             _currentTask.SetTaskStatus(TaskStatus.Completed);
-            _currentTask.Canceled -= CompleteGlobalTask;
+            _currentTask.Canceled -= CompleteTask;
 
             TaskCompleted?.Invoke(_currentTask);
 
@@ -71,7 +70,7 @@ namespace Game.Code.Logic.UtilityAI
         private void ExecuteTask()
         {
             _currentTask = _taskService.GetTask(_currentActor);
-            _currentTask.Canceled += CompleteGlobalTask;
+            _currentTask.Canceled += CompleteTask;
             
             _aiContext.SetActionCommand(_currentTask.GetCommand());
 

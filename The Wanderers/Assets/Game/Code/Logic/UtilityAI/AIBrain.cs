@@ -53,7 +53,7 @@ namespace Game.Code.Logic.UtilityAI
             }
 
             UtilityAction bestAction = DecideBestAction();
-            
+
             if (bestAction.IsActive())
                 SetAction(bestAction);
         }

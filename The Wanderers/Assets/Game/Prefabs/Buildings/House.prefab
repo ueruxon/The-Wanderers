@@ -63,6 +63,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0487ee3cae1f4d99b43ca23b804564d4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _enterPoint: {fileID: 3915571055264323127}
   _houseCapacity: 2
   _interactionPoint: {fileID: 3915571055264323127}
 --- !u!1 &4299865595302241957

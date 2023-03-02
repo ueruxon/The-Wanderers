@@ -5,7 +5,7 @@ using UnityEngine;
 
 namespace Game.Code.Logic.UtilityAI.Actions
 {
-    public class InteractionAction : UtilityAction
+    public class MiningAction : UtilityAction
     {
         // потом поменяем
         private float _currentHitTimer = 0f;

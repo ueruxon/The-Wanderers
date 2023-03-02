@@ -7,7 +7,6 @@ namespace Game.Code.Logic.Buildings
     public class House : Building
     {
         [SerializeField] private int _houseCapacity = 2;
-        [SerializeField] private Transform _interactionPoint;
 
         private List<Actor> _homeowners;
         
@@ -24,8 +23,5 @@ namespace Game.Code.Logic.Buildings
 
         public void RemoveUnit(Actor actor) => 
             _homeowners.Remove(actor);
-
-        public Transform GetEnterPoint() => 
-            _interactionPoint;
     }
 }

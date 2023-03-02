@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using Game.Code.Infrastructure.Context;
 using Game.Code.Infrastructure.Factories;
-using Game.Code.Infrastructure.Services.UnitTask;
+using Game.Code.Infrastructure.Services.ActorTask;
 using Game.Code.Logic.Buildings;
-using Game.Code.Logic.ResourcesLogic;
 
-namespace Game.Code.Logic.Game
+namespace Game.Code.Logic.ResourcesLogic
 {
     public class ResourceMiningController
     {
@@ -55,7 +55,7 @@ namespace Game.Code.Logic.Game
             return false;
         }
 
-        public void Dispose()
+        public void Cleanup()
         {
             foreach (ResourceNodeSpawner nodeSpawner in _spawners) 
                 nodeSpawner.ResourceSpawned -= OnResourceSpawned;

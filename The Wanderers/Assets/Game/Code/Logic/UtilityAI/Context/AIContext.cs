@@ -1,5 +1,5 @@
-﻿using Game.Code.Logic.Actors;
-using Game.Code.Logic.Game;
+﻿using Game.Code.Infrastructure.Context;
+using Game.Code.Logic.Actors;
 using Game.Code.Logic.UtilityAI.Commander;
 using UnityEngine;
 

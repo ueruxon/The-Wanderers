@@ -1,7 +1,7 @@
 ﻿using System;
 using Game.Code.Data.StaticData.Actors;
-using Game.Code.Infrastructure.Services.UnitTask;
-using Game.Code.Logic.Game;
+using Game.Code.Infrastructure.Context;
+using Game.Code.Infrastructure.Services.ActorTask;
 using Game.Code.Logic.UtilityAI;
 using Game.Code.Logic.UtilityAI.Context;
 using UnityEngine;

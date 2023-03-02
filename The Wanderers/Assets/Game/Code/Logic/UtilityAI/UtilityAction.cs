@@ -47,7 +47,7 @@ namespace Game.Code.Logic.UtilityAI
         protected virtual void OnTaskReceived(IContextProvider contextProvider) { }
 
         protected void CompleteTask() => 
-            _aIPlanner.CompleteGlobalTask();
+            _aIPlanner.CompleteTask();
 
         public ActionStatus GetActionStatus() => 
             CurrentActionStatus;

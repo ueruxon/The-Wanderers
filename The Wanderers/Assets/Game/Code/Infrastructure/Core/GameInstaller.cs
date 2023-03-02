@@ -1,11 +1,16 @@
-﻿using Game.Code.Common;
+﻿using System.Collections.Generic;
+using Game.Code.Common;
 using Game.Code.Data;
+using Game.Code.Infrastructure.Context;
 using Game.Code.Infrastructure.Factories;
+using Game.Code.Infrastructure.Services.ActorTask;
 using Game.Code.Infrastructure.Services.AssetManagement;
 using Game.Code.Infrastructure.Services.StaticData;
-using Game.Code.Infrastructure.Services.UnitTask;
+using Game.Code.Logic.Actors;
+using Game.Code.Logic.Buildings;
+using Game.Code.Logic.Buildings.ProductionBuildings;
 using Game.Code.Logic.Camera;
-using Game.Code.Logic.Game;
+using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Selection;
 
 namespace Game.Code.Infrastructure.Core
@@ -17,16 +22,28 @@ namespace Game.Code.Infrastructure.Core
         private readonly SelectionHandler _selectionHandler;
         private readonly CameraController _cameraController;
         
+        private readonly List<Quarry> _testQuarryList;
+        private readonly List<Storage> _testStorages;
+        private readonly List<House> _testHouses;
+
         private GameInitializer _gameInitializer;
         private GameLoop _gameLoop;
 
-        public GameInstaller(GameConfig gameConfig, ICoroutineRunner gameRunner, SelectionHandler selectionHandler,
-            CameraController cameraController)
+        public GameInstaller(GameConfig gameConfig, 
+            ICoroutineRunner gameRunner, 
+            SelectionHandler selectionHandler,
+            CameraController cameraController, 
+            List<Quarry> testQuarryList, 
+            List<Storage> testStorages,
+            List<House> testHouses)
         {
             _gameConfig = gameConfig;
             _coroutineRunner = gameRunner;
             _selectionHandler = selectionHandler;
             _cameraController = cameraController;
+            _testQuarryList = testQuarryList;
+            _testStorages = testStorages;
+            _testHouses = testHouses;
 
             InstallSystems();
         }
@@ -40,13 +57,16 @@ namespace Game.Code.Infrastructure.Core
             GameFactory gameFactory = new GameFactory(staticDataService, dynamicGameContext, actorTaskService);
             ResourceMiningController miningController = new ResourceMiningController(dynamicGameContext, gameFactory, actorTaskService);
             ActorSpawner actorSpawner = new ActorSpawner(_gameConfig, gameFactory, dynamicGameContext);
+            BuildingsHandler buildingsHandler = new BuildingsHandler(gameFactory, 
+                actorTaskService, dynamicGameContext, _testQuarryList, _testStorages, _testHouses); 
 
             _gameInitializer = new GameInitializer(
                 _selectionHandler, 
                 _cameraController,
                 staticDataService,
                 miningController, 
-                actorSpawner);
+                actorSpawner,
+                buildingsHandler);
         }
     }
 }

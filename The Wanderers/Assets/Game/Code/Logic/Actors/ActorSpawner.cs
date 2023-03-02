@@ -1,10 +1,10 @@
 ﻿using Game.Code.Data;
+using Game.Code.Infrastructure.Context;
 using Game.Code.Infrastructure.Factories;
-using Game.Code.Logic.Actors;
 using Game.Code.Logic.Actors.Villagers;
 using UnityEngine;
 
-namespace Game.Code.Logic.Game
+namespace Game.Code.Logic.Actors
 {
     public class ActorSpawner
     {
