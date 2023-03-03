@@ -16,22 +16,20 @@ namespace Game.Code.Logic.Selection
 
         private UnityEngine.Camera _camera;
         private PlayerInput _playerInput;
-
-        // для теста
-        [SerializeField] private SelectionMode _currentMode = SelectionMode.Select;
-
-        private List<ResourceNode> _selectedResourceNodes;
         
+        private List<ResourceNode> _selectedResourceNodes;
+
         private Vector3 _startDragPosition;
         private Vector3 _selectionCenterPosition;
 
+        private SelectionMode _currentMode;
         private bool _selection;
         
         public void Init()
         {
             _camera = UnityEngine.Camera.main;
             _selection = false;
-
+            _currentMode = SelectionMode.None;
             _selectedResourceNodes = new List<ResourceNode>();
 
             // вынести в отдельный инпут
@@ -46,6 +44,9 @@ namespace Game.Code.Logic.Selection
 
         public List<ResourceNode> GetSelectedNodes() =>
             _selectedResourceNodes;
+
+        public void SetSelectMode(SelectionMode selectionMode) => 
+            _currentMode = selectionMode;
 
         private void Update()
         {
@@ -124,7 +125,7 @@ namespace Game.Code.Logic.Selection
                     _selectedResourceNodes.Add(node);
             }
         }
-        
+
         private void ClearAllSelectedObjects() => 
             _selectedResourceNodes.Clear();
 

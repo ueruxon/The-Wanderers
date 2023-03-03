@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using Game.Code.Data.StaticData.ResourceNode;
 using Game.Code.Logic.ResourcesLogic;
 using UnityEditor;
@@ -24,7 +23,7 @@ namespace Game.Code.Editor
                             new SpawnerData(x.ResourceType, x.transform.position, x.transform))
                         .ToList();
             }
-
+            
             EditorUtility.SetDirty(target);
         }
     }

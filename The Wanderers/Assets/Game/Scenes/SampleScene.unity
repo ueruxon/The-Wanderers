@@ -3676,7 +3676,6 @@ MonoBehaviour:
   _mouseColliderMask:
     serializedVersion: 2
     m_Bits: 1025
-  _currentMode: 1
 --- !u!1001 &1125796221
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -6919,6 +6918,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 666391524199958298, guid: 5f95151e1b42d674c94be2cdb0ba1976,
+        type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7322662511436678770, guid: 5f95151e1b42d674c94be2cdb0ba1976,
         type: 3}

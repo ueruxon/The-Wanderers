@@ -14,11 +14,11 @@ namespace Game.Code.Infrastructure.Factories
 {
     public class GameFactory : IResourceMiningFactory
     {
-        private readonly StaticDataService _staticDataService;
+        private readonly IStaticDataService _staticDataService;
         private readonly DynamicGameContext _dynamicGameContext;
         private readonly IActorTaskService _actorTaskService;
 
-        public GameFactory(StaticDataService staticDataService, 
+        public GameFactory(IStaticDataService staticDataService, 
             DynamicGameContext dynamicGameContext, 
             IActorTaskService actorTaskService)
         {
@@ -30,8 +30,9 @@ namespace Game.Code.Infrastructure.Factories
         public List<ResourceNodeSpawner> CreateNodeSpawners()
         {
             List<ResourceNodeSpawner> nodeSpawners = new List<ResourceNodeSpawner>();
-
             ResourceSpawnersData spawnersOnLevel = _staticDataService.GetResourceSpawnersData();
+
+            GameObject container = new GameObject("ResourceSpawners");
 
             foreach (SpawnerData spawnerData in spawnersOnLevel.ResourceSpawners)
             {
@@ -39,7 +40,7 @@ namespace Game.Code.Infrastructure.Factories
                 ResourceNodeSpawner spawner = 
                     Object.Instantiate(spawnersOnLevel.Prefab, spawnerData.Position, Quaternion.identity);
                 
-                spawner.transform.SetParent(spawnerData.Container);
+                spawner.transform.SetParent(container.transform);
                 spawner.Init(spawnerData.Type, nodeData, this);
                 nodeSpawners.Add(spawner);
             }

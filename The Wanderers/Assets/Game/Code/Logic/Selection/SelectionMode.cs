@@ -5,5 +5,6 @@
         None,
         Select,
         Deselect,
+        Demolish,
     }
 }

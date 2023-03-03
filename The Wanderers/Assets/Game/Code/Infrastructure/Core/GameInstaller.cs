@@ -12,6 +12,7 @@ using Game.Code.Logic.Buildings.ProductionBuildings;
 using Game.Code.Logic.Camera;
 using Game.Code.Logic.ResourcesLogic;
 using Game.Code.Logic.Selection;
+using Game.Code.UI.Services.Factory;
 
 namespace Game.Code.Infrastructure.Core
 {
@@ -51,10 +52,11 @@ namespace Game.Code.Infrastructure.Core
         private void InstallSystems()
         {
             AssetProvider assetProvider = new AssetProvider();
-            StaticDataService staticDataService = new StaticDataService(assetProvider);
+            IStaticDataService staticDataService = new StaticDataService(assetProvider);
             ActorTaskService actorTaskService = new ActorTaskService(_selectionHandler, _coroutineRunner);
             DynamicGameContext dynamicGameContext = new DynamicGameContext();
             GameFactory gameFactory = new GameFactory(staticDataService, dynamicGameContext, actorTaskService);
+            UIFactory uiFactory = new UIFactory(assetProvider, staticDataService, _selectionHandler);
             ResourceMiningController miningController = new ResourceMiningController(dynamicGameContext, gameFactory, actorTaskService);
             ActorSpawner actorSpawner = new ActorSpawner(_gameConfig, gameFactory, dynamicGameContext);
             BuildingsHandler buildingsHandler = new BuildingsHandler(gameFactory, 
@@ -64,6 +66,7 @@ namespace Game.Code.Infrastructure.Core
                 _selectionHandler, 
                 _cameraController,
                 staticDataService,
+                uiFactory,
                 miningController, 
                 actorSpawner,
                 buildingsHandler);
