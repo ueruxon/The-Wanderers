@@ -5,6 +5,7 @@ using Game.Code.Infrastructure.Context;
 using Game.Code.Infrastructure.Factories;
 using Game.Code.Infrastructure.Services.ActorTask;
 using Game.Code.Infrastructure.Services.AssetManagement;
+using Game.Code.Infrastructure.Services.Progress;
 using Game.Code.Infrastructure.Services.StaticData;
 using Game.Code.Logic.Actors;
 using Game.Code.Logic.Buildings;
@@ -53,21 +54,26 @@ namespace Game.Code.Infrastructure.Core
         {
             AssetProvider assetProvider = new AssetProvider();
             IStaticDataService staticDataService = new StaticDataService(assetProvider);
-            ActorTaskService actorTaskService = new ActorTaskService(_selectionHandler, _coroutineRunner);
+            IGameProgressService progressService = new GameProgressService();
             DynamicGameContext dynamicGameContext = new DynamicGameContext();
+            
+            ActorTaskService actorTaskService = new ActorTaskService(_selectionHandler, _coroutineRunner);
             GameFactory gameFactory = new GameFactory(staticDataService, dynamicGameContext, actorTaskService);
-            UIFactory uiFactory = new UIFactory(assetProvider, staticDataService, _selectionHandler);
+            UIFactory uiFactory = new UIFactory(assetProvider, staticDataService, progressService, _selectionHandler);
             ResourceMiningController miningController = new ResourceMiningController(dynamicGameContext, gameFactory, actorTaskService);
             ActorSpawner actorSpawner = new ActorSpawner(_gameConfig, gameFactory, dynamicGameContext);
+            ResourceRepository resourceRepository = new ResourceRepository(progressService);
             BuildingsHandler buildingsHandler = new BuildingsHandler(gameFactory, 
-                actorTaskService, dynamicGameContext, _testQuarryList, _testStorages, _testHouses); 
+                actorTaskService, dynamicGameContext, resourceRepository, _testQuarryList, _testStorages, _testHouses); 
 
             _gameInitializer = new GameInitializer(
                 _selectionHandler, 
                 _cameraController,
+                progressService,
                 staticDataService,
                 uiFactory,
                 miningController, 
+                resourceRepository,
                 actorSpawner,
                 buildingsHandler);
         }

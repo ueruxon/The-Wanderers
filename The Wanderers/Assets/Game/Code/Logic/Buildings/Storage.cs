@@ -17,14 +17,19 @@ namespace Game.Code.Logic.Buildings
         [SerializeField] private Transform _visualResourceFillerPrefab;
         [SerializeField] private Transform _fillerContainer;
 
+        private ResourceRepository _resourceRepository;
+        
         private Stack<Resource> _storedResources;
         private Transform[] _visualResourceFillers;
 
         private int _currentResourceIndex;
         private int _reservedPlaceCount;
 
-        public void Init()
+        
+        public void Init(ResourceRepository resourceRepository)
         {
+            _resourceRepository = resourceRepository;
+            
             _storedResources = new Stack<Resource>(StorageCapacity);
             _visualResourceFillers = new Transform[StorageCapacity];
             _currentResourceIndex = 0;
@@ -55,7 +60,8 @@ namespace Game.Code.Logic.Buildings
         {
             _visualResourceFillers[_currentResourceIndex].gameObject.SetActive(true);
             _currentResourceIndex++;
-
+            
+            _resourceRepository.AddResource(resource.GetResourceType(), 1);
             _storedResources.Push(resource);
         }
 

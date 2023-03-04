@@ -9,6 +9,7 @@ namespace Game.Code.Logic.Selection
     public class SelectionHandler : MonoBehaviour
     {
         public event Action<SelectionMode> ResourceNodeSelected;
+        public event Action<SelectionMode> SelectionModeChanged; 
 
         [SerializeField] private Transform _selectedArea;
         [SerializeField] private LayerMask _selectionObjectsMask;
@@ -37,6 +38,7 @@ namespace Game.Code.Logic.Selection
             _playerInput.Enable();
             _playerInput.Selection.Select.performed += OnMousePressed;
             _playerInput.Selection.Select.canceled += OnMouseRaised;
+            _playerInput.Selection.Cancel.performed += OnSelectCanceled;
             
             // делать инстаншиейт и загружать префаб через статик дату
             _selectedArea.gameObject.SetActive(false);
@@ -45,8 +47,11 @@ namespace Game.Code.Logic.Selection
         public List<ResourceNode> GetSelectedNodes() =>
             _selectedResourceNodes;
 
-        public void SetSelectMode(SelectionMode selectionMode) => 
+        public void SetSelectMode(SelectionMode selectionMode)
+        {
             _currentMode = selectionMode;
+            SelectionModeChanged?.Invoke(_currentMode);
+        }
 
         private void Update()
         {
@@ -55,6 +60,12 @@ namespace Game.Code.Logic.Selection
 
             if (_selection)
                 DrawSelectedArea();
+        }
+
+        private void OnSelectCanceled(InputAction.CallbackContext inputValue)
+        {
+            SetSelectMode(SelectionMode.None);
+            ClearSelectedArea();
         }
 
         private void OnMousePressed(InputAction.CallbackContext inputValue)
@@ -78,10 +89,7 @@ namespace Game.Code.Logic.Selection
                     ResourceNodeSelected?.Invoke(_currentMode);
             }
             
-            _selection = false;
-
-            _selectedArea.localScale = Vector3.zero;
-            _selectedArea.gameObject.SetActive(false);
+            ClearSelectedArea();
         }
 
         private void SelectObjects()
@@ -170,6 +178,13 @@ namespace Game.Code.Logic.Selection
 
             _selectedArea.position = lowerLeft;
             _selectedArea.localScale = upperRight - lowerLeft;
+        }
+
+        private void ClearSelectedArea()
+        {
+            _selection = false;
+            _selectedArea.localScale = Vector3.zero;
+            _selectedArea.gameObject.SetActive(false);
         }
 
         private Vector3 GetMouseWorldPosition(Vector2 screenPosition)

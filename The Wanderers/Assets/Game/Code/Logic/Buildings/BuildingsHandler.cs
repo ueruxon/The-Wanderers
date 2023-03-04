@@ -14,6 +14,7 @@ namespace Game.Code.Logic.Buildings
         private readonly GameFactory _gameFactory;
         private readonly IActorTaskService _taskService;
         private readonly DynamicGameContext _gameContext;
+        private readonly ResourceRepository _resourceRepository;
         private readonly List<Quarry> _testQuarryList;
         private readonly List<Storage> _testStorages;
         private readonly List<House> _testHouses;
@@ -21,13 +22,15 @@ namespace Game.Code.Logic.Buildings
         public BuildingsHandler(GameFactory gameFactory,
             IActorTaskService taskService,
             DynamicGameContext gameContext,
+            ResourceRepository resourceRepository,
             List<Quarry> testQuarryList,
-            List<Storage> testStorage, 
+            List<Storage> testStorage,
             List<House> testHouses)
         {
             _gameFactory = gameFactory;
             _taskService = taskService;
             _gameContext = gameContext;
+            _resourceRepository = resourceRepository;
             _testQuarryList = testQuarryList;
             _testStorages = testStorage;
             _testHouses = testHouses;
@@ -44,7 +47,7 @@ namespace Game.Code.Logic.Buildings
 
             foreach (Storage storage in _testStorages)
             {
-                storage.Init();
+                storage.Init(_resourceRepository);
                 OnStorageBuilt(storage);
             }
 

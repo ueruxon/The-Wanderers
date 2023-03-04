@@ -35,38 +35,38 @@ namespace Game.Code.Infrastructure.Core
             // }
         }
 
-        private void Update()
-        {
-            // для теста
-            if (Input.GetKeyDown(KeyCode.K))
-            {
-                Vector3 pos = new Vector3(57, 0, 20);
-                Storage storage = Object.Instantiate(_storagePrefab, pos, Quaternion.identity);
-                storage.Init();
-                // ивент создания??
-                OnStorageBuilt(storage);
-            }
-            
-            // для теста
-            if (Input.GetKeyDown(KeyCode.L))
-            {
-                Vector3 pos = new Vector3(34, 0, 37);
-                Storage storage = Object.Instantiate(_storagePrefab, pos, Quaternion.identity);
-                storage.Init();
-                // ивент создания??
-                OnStorageBuilt(storage);
-            }
-            
-            // для теста
-            if (Input.GetKeyDown(KeyCode.J))
-            {
-                Vector3 pos = new Vector3(25.48f, 0, -25);
-                House house = Object.Instantiate(_housePrefab, pos, Quaternion.identity);
-                house.Init();
-                // ивент создания??
-                OnHouseBuilt(house);
-            }
-        }
+        // private void Update()
+        // {
+        //     // для теста
+        //     if (Input.GetKeyDown(KeyCode.K))
+        //     {
+        //         Vector3 pos = new Vector3(57, 0, 20);
+        //         Storage storage = Object.Instantiate(_storagePrefab, pos, Quaternion.identity);
+        //         storage.Init();
+        //         // ивент создания??
+        //         OnStorageBuilt(storage);
+        //     }
+        //     
+        //     // для теста
+        //     if (Input.GetKeyDown(KeyCode.L))
+        //     {
+        //         Vector3 pos = new Vector3(34, 0, 37);
+        //         Storage storage = Object.Instantiate(_storagePrefab, pos, Quaternion.identity);
+        //         storage.Init();
+        //         // ивент создания??
+        //         OnStorageBuilt(storage);
+        //     }
+        //     
+        //     // для теста
+        //     if (Input.GetKeyDown(KeyCode.J))
+        //     {
+        //         Vector3 pos = new Vector3(25.48f, 0, -25);
+        //         House house = Object.Instantiate(_housePrefab, pos, Quaternion.identity);
+        //         house.Init();
+        //         // ивент создания??
+        //         OnHouseBuilt(house);
+        //     }
+        // }
         
         // для теста (вынести в другой класс)
         private void OnStorageBuilt(Storage storage)
